@@ -709,7 +709,7 @@ class PokemonSpeciesVariety:
 
 
 class StatResource(utility.CacheableResource):
-    yaml_tag = '!Resource'
+    yaml_tag = '!StatResource'
 
     class Meta:
         name = 'Stat'

@@ -3,34 +3,8 @@
 
 import requests
 import resources.utility as utility
+from universal import lazy_property
 
-
-class EncounterResource(utility.CacheablePropertyResource):
-    yaml_tag = '!EncounterResource'
-
-    class Meta:
-        name = 'Encounters'
-        resource_name = 'encounter'
-        cache_folder = 'encounters/encounters/'
-        identifier = 'id'
-        attributes = (
-            'version_details',
-            'location_area'
-        )
-        valid_status_codes = (
-            200,
-        )
-        methods = (
-            'get',
-        )
-
-    @staticmethod
-    def get_url(url, **kwargs):
-        if 'from_url' in kwargs:
-            return kwargs['from_url']
-        # Remove the "encounter" Beckett automatically adds.
-        url = '/'.join(url.split('/')[0:-1])
-        return '{}/pokemon/{}/encounters/'.format(url, kwargs.get('uid'))
 
 class EncounterMethodResource(utility.CacheablePropertyResource):
     yaml_tag = '!EncounterMethodResource'
@@ -52,3 +26,58 @@ class EncounterMethodResource(utility.CacheablePropertyResource):
         methods = (
             'get',
         )
+
+    @lazy_property
+    def names(self):
+        return [utility.Name(**kwargs) for kwargs in self._names]
+
+
+class EcounterCondition(utility.CacheablePropertyResource):
+
+    yaml_tag = '!EncounterConditionResource'
+
+    class Meta:
+        name = 'Encounter Condition'
+        resource_name = 'encounter-condition'
+        cache_folder = 'encounters/encounter-conditions/'
+        identifier = 'id'
+        attributes = (
+            'id',
+            'name',
+            'names',
+            'values'
+        )
+
+    @lazy_property
+    def names(self):
+        return [utility.Name(**kwargs) for kwargs in self._names]
+
+    @lazy_property
+    def values(self):
+        return [utility.NamedAPIResource(**kwargs) for kwargs in self._values]
+
+
+class EncounterConditionValueResource(utility.CacheablePropertyResource):
+
+    yaml_tag = '!EncounterConditionValueResource'
+
+    class Meta:
+        name = 'Encounter Condition Value'
+        resource_name = 'encounter-condition-value'
+        cache_folder = 'encounters/encounter-condition-values/'
+        identifier = 'id'
+        attributes = (
+            'id',
+            'name',
+            'names',
+            'condition'
+        )
+
+    @lazy_property
+    def names(self):
+        return [utility.Name(**kwargs) for kwargs in self._names]
+
+    @lazy_property
+    def condition(self):
+        return [utility.NamedAPIResource(**kwargs)
+                for kwargs in self._condition]
