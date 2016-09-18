@@ -4,6 +4,7 @@
 from beckett import resources
 import client
 import yaml
+from universal import lazy_property
 
 class CacheableResource(resources.BaseResource, yaml.YAMLObject):
 
@@ -76,16 +77,13 @@ class APIResource:
         self.resource_type = resource_type if resource_type \
             else self.url.split('/')[-3]
         self.id = self.url.split('/')[-2]
-        self.resource__cached = None
 
-    @property
+    @lazy_property
     def resource(self):
-        if not self.resource__cached:
-            poke_client = client.PokemonClient()
-            resource =  getattr(poke_client,
-                                'get_' + self.resource_type)(uid=self.id)
-            self.resource__cached = resource
-        return self.resource__cached
+        poke_client = client.PokemonClient()
+        resource =  getattr(poke_client,
+                            'get_' + self.resource_type)(uid=self.id)
+        return resource
 
 
 class NamedAPIResource(APIResource):
@@ -132,4 +130,18 @@ class Description:
 
     def __init__(self, **kwargs):
         self.description = kwargs['description']
+        self.language = NamedAPIResource(**kwargs['language'])
+
+
+class GenerationGameIndex:
+
+    def __init__(self, **kwargs):
+        self.index = kwargs['index']
+        self.generation = NamedAPIResource(**kwargs['generation'])
+
+
+class FlavorText:
+
+    def __init__(self, **kwargs):
+        self.flavor_text = kwargs['flavor_text']
         self.language = NamedAPIResource(**kwargs['language'])
