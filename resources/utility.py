@@ -94,7 +94,12 @@ class NamedAPIResource(APIResource):
 
 
 class VersionEncounterDetail:
-    pass
+
+    def __init__(self, **kwargs):
+        self.version = NamedAPIResource(**kwargs['version'])
+        self.max_chance = kwargs['max_chance']
+        self.encounter_details = [Encounter(**encounter)
+                                  for encounter in kwargs['encounter_details']]
 
 
 class VersionGameIndex:
@@ -145,3 +150,13 @@ class FlavorText:
     def __init__(self, **kwargs):
         self.flavor_text = kwargs['flavor_text']
         self.language = NamedAPIResource(**kwargs['language'])
+
+
+class Encounter:
+
+    def __init__(self, **kwargs):
+        self.min_level = kwargs['min_level']
+        self.max_level = kwargs['max_level']
+        self.condition_values = NamedAPIResource(**kwargs['condition_Values'])
+        self.chance = kwargs['chance']
+        self.method = NamedAPIResource(**kwargs['method'])
