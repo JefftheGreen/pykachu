@@ -6,7 +6,7 @@ import resources.utility as utility
 from universal import lazy_property
 
 
-class AbilityResource(utility.CacheableResource):
+class AbilityResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!AbilityResource'
 
@@ -104,7 +104,7 @@ class AbilityPokemon:
         return self.pokemon.resource
 
 
-class CharacteristicResource(utility.CacheableResource):
+class CharacteristicResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!CharacteristicResource'
 
@@ -132,7 +132,7 @@ class CharacteristicResource(utility.CacheableResource):
                     for kwargs in self._descriptions]
 
 
-class EggGroupResource(utility.CacheableResource):
+class EggGroupResource(utility.CacheablePropertyResource):
     
     yaml_tag = 'PokemonCharacteristicResource'
     
@@ -164,7 +164,7 @@ class EggGroupResource(utility.CacheableResource):
                 for kwargs in self._pokemon_species]
 
 
-class GenderResource(utility.CacheableResource):
+class GenderResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!GenderResource'
 
@@ -210,7 +210,7 @@ class PokemonSpeciesGender:
         return self.rate / 8 if self.rate > 0 else 1.0
 
 
-class GrowthRateResource(utility.CacheableResource):
+class GrowthRateResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!GrowthRateResource'
 
@@ -255,7 +255,7 @@ class GrowthRateExperienceLevel:
         self.experience = kwargs['experience']
 
 
-class NatureResource(utility.CacheableResource):
+class NatureResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!NatureResource'
 
@@ -360,7 +360,7 @@ class MoveBattleStylePreference:
             **kwargs['move_battle_style'])
 
 
-class PokeathlonStatResource(utility.CacheableResource):
+class PokeathlonStatResource(utility.CacheablePropertyResource):
     yaml_tag = '!PokeathlonStatResource'
 
     class Meta:
@@ -406,7 +406,7 @@ class NaturePokeathlonStatAffect:
         self.nature = utility.NamedAPIResource(**kwargs['nature'])
 
 
-class PokemonColorResource(utility.CacheableResource):
+class PokemonColorResource(utility.CacheablePropertyResource):
     yaml_tag = '!ColorResource'
 
     class Meta:
@@ -437,7 +437,7 @@ class PokemonColorResource(utility.CacheableResource):
                 for kwargs in self._pokemon_species]
 
 
-class PokemonFormResource(utility.CacheableResource):
+class PokemonFormResource(utility.CacheablePropertyResource):
     yaml_tag = '!FormResource'
 
     class Meta:
@@ -497,7 +497,7 @@ class PokemonFormSprites:
         self.back_shiny = kwargs['back_shiny']
 
 
-class PokemonHabitatResource(utility.CacheableResource):
+class PokemonHabitatResource(utility.CacheablePropertyResource):
     yaml_tag = '!HabitatResource'
 
     class Meta:
@@ -528,7 +528,7 @@ class PokemonHabitatResource(utility.CacheableResource):
                 for kwargs in self._pokemon_species]
 
 
-class PokemonShapeResource(utility.CacheableResource):
+class PokemonShapeResource(utility.CacheablePropertyResource):
     yaml_tag = '!ShapeResource'
 
     class Meta:
@@ -571,7 +571,7 @@ class AwesomeName:
         self.language = utility.NamedAPIResource(**kwargs['language'])
 
 
-class PokemonSpeciesResource(utility.CacheableResource):
+class PokemonSpeciesResource(utility.CacheablePropertyResource):
     yaml_tag = '!SpeciesResource'
 
     class Meta:
@@ -708,7 +708,7 @@ class PokemonSpeciesVariety:
         self.pokemon = utility.NamedAPIResource(**kwargs['pokemon'])
 
 
-class StatResource(utility.CacheableResource):
+class StatResource(utility.CacheablePropertyResource):
     yaml_tag = '!StatResource'
 
     class Meta:
@@ -919,6 +919,7 @@ class PokemonResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def abilities(self):
+        print('retrieving abilities for {}'.format(id(self)))
         abilities = [PokemonAbility(**ability) for ability in self._abilities]
         abilities.sort(key=lambda a: a.slot)
         return abilities

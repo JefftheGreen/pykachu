@@ -19,18 +19,17 @@ class MyTestCase(unittest.TestCase):
         self.cached_bulbasaur = self.pokemon_client.get_pokemon(uid=3)[0]
 
     def test_property_resource(self):
-        assert self.bulbasaur.id == 3
-        assert not hasattr(self.bulbasaur, '_id')
-        for i in range(len(self.bulbasaur.abilities)):
-            ability = self.bulbasaur.abilities[i]
+        assert self.cached_bulbasaur.id == 3
+        assert not hasattr(self.cached_bulbasaur, '_id')
+        for i in range(len(self.cached_bulbasaur.abilities)):
+            ability = self.cached_bulbasaur.abilities[i]
             assert isinstance(ability, resources.PokemonAbility)
             assert ability.name in ['chlorophyll', 'overgrow']
             assert ability.slot in [1, 3]
             assert ability.is_hidden in [True, False]
             assert (ability.slot == 1) != ability.is_hidden
-            assert isinstance(ability.get(), resources.AbilityResource)
+            assert isinstance(ability.resource, resources.AbilityResource)
         assert [t.name for t in self.bulbasaur.types] == ['grass', 'poison']
-        #assert self.bulbasaur.hp.base_stat == 45
 
     def test_caching(self):
         assert os.path.isfile(os.path.expanduser('~/.PykachuCache/') +

@@ -15,8 +15,7 @@ from resources import (AbilityResource, CharacteristicResource,
                        PokemonColorResource, PokemonFormResource,
                        PokemonHabitatResource, PokemonShapeResource,
                        PokemonSpeciesResource, StatResource, TypeResource,
-                       PokemonResource,
-                       EncounterResource)
+                       PokemonResource)
 
 class BeckettClient(clients.BaseClient):
     class Meta:
@@ -37,8 +36,7 @@ class BeckettClient(clients.BaseClient):
             PokemonSpeciesResource,
             StatResource,
             TypeResource,
-            PokemonResource,
-            EncounterResource
+            PokemonResource
         )
 
 
