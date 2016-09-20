@@ -28,7 +28,7 @@ class MyTestCase(unittest.TestCase):
             assert ability.slot in [1, 3]
             assert ability.is_hidden in [True, False]
             assert (ability.slot == 1) != ability.is_hidden
-            assert isinstance(ability.resource, resources.AbilityResource)
+            assert isinstance(ability.resource[0], resources.AbilityResource)
         assert [t.name for t in self.bulbasaur.types] == ['grass', 'poison']
 
     def test_caching(self):

@@ -3,11 +3,13 @@
 
 import configparser
 import os
+import functools
 
 config_parser = configparser.ConfigParser()
 default_cache_path = os.path.expanduser('~/.PykachuCache/')
 default_expiration_length = 7*24 # Seven days
-import functools
+default_cache_size = float('inf')
+default_cache_compression = True
 
 def get_config():
     config_parser.read(config_path())
