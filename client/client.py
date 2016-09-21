@@ -3,12 +3,7 @@
 
 from beckett import clients
 import os
-import yaml
-import configparser
-import universal
 import cache
-import tempfile
-from datetime import datetime, timedelta
 from resources import (AbilityResource, CharacteristicResource,
                        EggGroupResource, GenderResource, GrowthRateResource,
                        NatureResource, PokeathlonStatResource,
@@ -16,6 +11,7 @@ from resources import (AbilityResource, CharacteristicResource,
                        PokemonHabitatResource, PokemonShapeResource,
                        PokemonSpeciesResource, StatResource, TypeResource,
                        PokemonResource)
+
 
 class BeckettClient(clients.BaseClient):
     class Meta:
@@ -55,7 +51,6 @@ class PokemonClient():
         self.read = read_cache
         self.write = write_cache
         if self.read or self.write:
-            #TODO: Check and/or set up map files
             if not os.path.isdir(cache.get_cache_dir()):
                 os.makedirs(cache.get_cache_dir())
         self.set_attributes()
@@ -102,12 +97,12 @@ class PokemonClient():
                                          resource_id):
                     os.remove(file_name)
                 else:
-                    return cache.read_cache(file_name)
+                    return cache.read_cache(file_name=file_name)
             # There's nothing from the cache, so call Pokeapi
             beckett_result = beckett_method(**kwargs)
             # Write to the cache.
             if self.write:
-                cache.write_cache(beckett_result, file_name)
+                cache.write_cache(beckett_result, file_name=file_name)
                 # Set the expiration date for this cached file.
                 cache.set_expiration(resource.Meta.name.lower(),
                                      resource_id)

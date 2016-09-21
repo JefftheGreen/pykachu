@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*
 
 import requests
-import resources.utility as utility
+
+import resources.common
+import universal as utility
 from universal import lazy_property
 
 
@@ -29,7 +31,7 @@ class EncounterMethodResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
 
 class EcounterCondition(utility.CacheablePropertyResource):
@@ -50,7 +52,7 @@ class EcounterCondition(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def values(self):
@@ -75,9 +77,9 @@ class EncounterConditionValueResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def condition(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._condition]

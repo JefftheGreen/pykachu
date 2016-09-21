@@ -7,3 +7,4 @@ from .encounters import *
 from .evolution import *
 from .pokemon import *
 from .utility import *
+from .common import *

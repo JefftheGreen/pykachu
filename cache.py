@@ -72,7 +72,7 @@ def get_max_size():
     return size
 
 def get_size():
-    pass
+    return 0
     # TODO: function that gets total size of cache
 
 
@@ -158,6 +158,7 @@ def write_cache(result, category=None, id=None, file_name=None):
     if not file_name:
         file_name = get_file_path(category, id)
     # TODO: Make this threaded
+    print(file_name)
     cached = yaml.dump_all([result], Dumper=yaml.CSafeDumper)
     if get_compression():
         with gzip.open(file_name, mode='wb', compresslevel=6) as file:
@@ -166,7 +167,7 @@ def write_cache(result, category=None, id=None, file_name=None):
         with open(file_name, mode='w+') as file:
             print(cached, file=file)
     # If we've gone over the maximum size, clean the cache to reduce it.
-    if get_size > get_max_size():
+    if get_size() > get_max_size():
         clean()
 
 def get_file_path(category, id):
@@ -240,7 +241,7 @@ def set_expiration(category, id):
 #   id (integer):
 #       the id of the cached resource.
 def check_expiration(category, id):
-    expiration = get_expiration_length(category, id)
+    expiration = get_expiration(category, id)
     if expiration:
         if datetime.now() > expiration:
             return True
@@ -263,7 +264,7 @@ def get_expiration(category, id):
             return expir_date
     return None
 
-def get_size(category, id):
+def get_file_size(category, id):
     return os.stat(get_file_path(category, id)).st_size
 
 def clean():

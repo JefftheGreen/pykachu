@@ -1,7 +1,7 @@
 # /usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from resources.utility import lazy_property
+import resources.common
+from universal import lazy_property
 import resources.utility as utility
 
 
@@ -23,7 +23,7 @@ class ContestTypeResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def berry_flavor(self):
-        return utility.NamedAPIResource(**self._berry_flavor)
+        return resources.common.NamedAPIResource(**self._berry_flavor)
 
     @lazy_property
     def names(self):
@@ -35,7 +35,7 @@ class ContestName:
     def __init__(self, **kwargs):
         self.name = kwargs['name']
         self.color = kwargs['color']
-        self.language = utility.NamedAPIResource(**kwargs['language'])
+        self.language = resources.common.NamedAPIResource(**kwargs['language'])
 
 
 class ContestEffectResource(utility.CacheablePropertyResource):
@@ -57,11 +57,11 @@ class ContestEffectResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def effect_entries(self):
-        return [utility.Effect(**kwargs) for kwargs in self._effect_entries]
+        return [resources.common.Effect(**kwargs) for kwargs in self._effect_entries]
 
     @lazy_property
     def flavor_text_entries(self):
-        return [utility.FlavorText(**kwargs)
+        return [resources.common.FlavorText(**kwargs)
                 for kwargs in self._flavor_text_entries]
 
 
@@ -83,9 +83,9 @@ class SuperContestEffect(utility.CacheablePropertyResource):
 
     @lazy_property
     def flavor_text_entries(self):
-        return [utility.FlavorText(**kwargs)
+        return [resources.common.FlavorText(**kwargs)
                 for kwargs in self._flavor_text_entries]
 
     @lazy_property
     def moves(self):
-        return [utility.NamedAPIResource(**kwargs) for kwargs in self._moves]
+        return [resources.common.NamedAPIResource(**kwargs) for kwargs in self._moves]

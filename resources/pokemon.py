@@ -1,7 +1,6 @@
 # /usr/bin/env python
 # -*- coding: utf-8 -*-
-
-
+import resources.common
 import resources.utility as utility
 from universal import lazy_property
 
@@ -35,15 +34,15 @@ class AbilityResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def generation(self):
-        return utility.NamedAPIResource(**self._generation)
+        return resources.common.NamedAPIResource(**self._generation)
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def effect_entries(self):
-        return [utility.VerboseEffect(**kwargs)
+        return [resources.common.VerboseEffect(**kwargs)
                 for kwargs in self._effect_entries]
 
     @lazy_property
@@ -71,17 +70,17 @@ class AbilityResource(utility.CacheablePropertyResource):
 class AbilityEffectChange:
 
     def __init__(self, **kwargs):
-        self.effect_entries = [utility.Effect(**entry)
+        self.effect_entries = [resources.common.Effect(**entry)
                                for entry in kwargs['effect_entries']]
-        self.version_group = utility.NamedAPIResource(**kwargs['version_group'])
+        self.version_group = resources.common.NamedAPIResource(**kwargs['version_group'])
 
 
 class AbilityFlavorText:
 
     def __init__(self, **kwargs):
         self.flavor_text = kwargs['flavor_text']
-        self.language = utility.NamedAPIResource(**kwargs['language'])
-        self.version_group = utility.NamedAPIResource(**kwargs['version_group'])
+        self.language = resources.common.NamedAPIResource(**kwargs['language'])
+        self.version_group = resources.common.NamedAPIResource(**kwargs['version_group'])
 
 
 class AbilityPokemon:
@@ -89,7 +88,7 @@ class AbilityPokemon:
     def __init__(self, **kwargs):
         self.is_hidden = kwargs['is_hidden']
         self.slot = kwargs['slot']
-        self.pokemon = utility.NamedAPIResource(**kwargs['pokemon'])
+        self.pokemon = resources.common.NamedAPIResource(**kwargs['pokemon'])
 
     @property
     def id(self):
@@ -128,7 +127,7 @@ class CharacteristicResource(utility.CacheablePropertyResource):
 
         @lazy_property
         def descriptions(self):
-            return [utility.Description(**kwargs)
+            return [resources.common.Description(**kwargs)
                     for kwargs in self._descriptions]
 
 
@@ -156,11 +155,11 @@ class EggGroupResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def pokemon_species(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._pokemon_species]
 
 
@@ -193,7 +192,7 @@ class GenderResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def required_for_evolution(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._required_for_evolution]
 
 
@@ -201,7 +200,7 @@ class PokemonSpeciesGender:
 
     def __init__(self, **kwargs):
         self.rate = kwargs['rate']
-        self.pokemon_species = utility.NamedAPIResource(
+        self.pokemon_species = resources.common.NamedAPIResource(
             **kwargs['pokemon_species']
         )
 
@@ -236,7 +235,7 @@ class GrowthRateResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def descriptions(self):
-        [utility.Description(**kwargs) for kwargs in self._descriptions]
+        [resources.common.Description(**kwargs) for kwargs in self._descriptions]
 
     @lazy_property
     def levels(self):
@@ -244,7 +243,7 @@ class GrowthRateResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def pokemon_species(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._pokemon_species]
 
 
@@ -294,28 +293,28 @@ class NatureResource(utility.CacheablePropertyResource):
     @property
     def decreased_stat(self):
         if not self.decreased_stat__cached:
-            self.decreased_stat__cached = utility.NamedAPIResource(
+            self.decreased_stat__cached = resources.common.NamedAPIResource(
                 **self._decreased_stat)
         return self.decrease_stat__cached
 
     @property
     def increased_stat(self):
         if not self.increased_stat__cached:
-            self.increased_stat__cached = utility.NamedAPIResource(
+            self.increased_stat__cached = resources.common.NamedAPIResource(
                 **self._increased_stat)
         return self.increase_stat__cached
 
     @property
     def hates_flavor(self):
         if not self.hates_flavor__cached:
-            self.hates_flavor__cached =  utility.NamedAPIResource(
+            self.hates_flavor__cached =  resources.common.NamedAPIResource(
                 **self._hates_flavor)
         return self.increase_stat__cached
 
     @property
     def likes_flavor(self):
         if not self.likes_flavor__cached:
-            self.likes_flavor__cached = utility.NamedAPIResource(
+            self.likes_flavor__cached = resources.common.NamedAPIResource(
                 **self._likes_flavor)
         return self.increase_stat__cached
 
@@ -338,7 +337,7 @@ class NatureResource(utility.CacheablePropertyResource):
     @property
     def names(self):
         if not self.names__cached:
-            self.names__cached = [utility.Name(**kwargs)
+            self.names__cached = [resources.common.Name(**kwargs)
                                   for kwargs in self._names]
         return self.names__cached
 
@@ -347,7 +346,7 @@ class NatureStatChange:
 
     def __init__(self, **kwargs):
         self.max_change = kwargs['max_change']
-        self.pokeathlon_stat = utility.NamedAPIResource(
+        self.pokeathlon_stat = resources.common.NamedAPIResource(
             **kwargs['pokeathlon_stat'])
 
 
@@ -356,7 +355,7 @@ class MoveBattleStylePreference:
     def __init__(self, kwargs):
         self.low_hp_preference = kwargs['low_hp_preference']
         self.high_hp_preference = kwargs['high_hp_preference']
-        self.move_battle_style = utility.NamedAPIResource(
+        self.move_battle_style = resources.common.NamedAPIResource(
             **kwargs['move_battle_style'])
 
 
@@ -383,7 +382,7 @@ class PokeathlonStatResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def affecting_natures(self):
@@ -403,7 +402,7 @@ class NaturePokeathlonStatAffect:
 
     def __init__(self, **kwargs):
         self.max_change = kwargs['max_change']
-        self.nature = utility.NamedAPIResource(**kwargs['nature'])
+        self.nature = resources.common.NamedAPIResource(**kwargs['nature'])
 
 
 class PokemonColorResource(utility.CacheablePropertyResource):
@@ -429,11 +428,11 @@ class PokemonColorResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def pokemon_species(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._pokemon_species]
 
 
@@ -469,7 +468,7 @@ class PokemonFormResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def pokemon(self):
-        return utility.NamedAPIResource(**self._pokemon)
+        return resources.common.NamedAPIResource(**self._pokemon)
 
     @lazy_property
     def sprites(self):
@@ -477,15 +476,15 @@ class PokemonFormResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def version_group(self):
-        return utility.NamedAPIResource(**self._version_group)
+        return resources.common.NamedAPIResource(**self._version_group)
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def form_names(self):
-        return [utility.Name(**kwargs) for kwargs in self._form_names]
+        return [resources.common.Name(**kwargs) for kwargs in self._form_names]
 
 
 class PokemonFormSprites:
@@ -520,11 +519,11 @@ class PokemonHabitatResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def pokemon_species(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._pokemon_species]
 
 
@@ -556,11 +555,11 @@ class PokemonShapeResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def pokemon_species(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._pokemon_species]
 
 
@@ -568,7 +567,7 @@ class AwesomeName:
 
     def __init__(self, **kwargs):
         self.awesome_name = kwargs['awesome_name']
-        self.language = utility.NamedAPIResource(**kwargs['language'])
+        self.language = resources.common.NamedAPIResource(**kwargs['language'])
 
 
 class PokemonSpeciesResource(utility.CacheablePropertyResource):
@@ -615,7 +614,7 @@ class PokemonSpeciesResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def growth_rate(self):
-        return utility.NamedAPIResource(**self._growth_rate)
+        return resources.common.NamedAPIResource(**self._growth_rate)
 
     @lazy_property
     def pokedex_numbers(self):
@@ -624,36 +623,36 @@ class PokemonSpeciesResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def egg_groups(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._egg_groups]
 
     @lazy_property
     def color(self):
-        return utility.NamedAPIResource(**self._color)
+        return resources.common.NamedAPIResource(**self._color)
 
     @lazy_property
     def shape(self):
-        return utility.NamedAPIResource(**self._shape)
+        return resources.common.NamedAPIResource(**self._shape)
 
     @lazy_property
     def evolves_from_species(self):
-        return utility.NamedAPIResource(**self._evolves_from_species)
+        return resources.common.NamedAPIResource(**self._evolves_from_species)
 
     @lazy_property
     def evolution_chain(self):
-        return utility.APIResource(**self._evolution_chain)
+        return resources.common.APIResource(**self._evolution_chain)
 
     @lazy_property
     def habitat(self):
-        return utility.NamedAPIResource(**self._habitat)
+        return resources.common.NamedAPIResource(**self._habitat)
 
     @lazy_property
     def generation(self):
-        return utility.NamedAPIResource(**self._generation)
+        return resources.common.NamedAPIResource(**self._generation)
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def pal_park_encounters(self):
@@ -662,12 +661,12 @@ class PokemonSpeciesResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def flavor_text_entries(self):
-        return [utility.FlavorText(**kwargs)
+        return [resources.common.FlavorText(**kwargs)
                 for kwargs in self._flavor_text_entries]
 
     @lazy_property
     def form_descriptions(self):
-        return [utility.Description(**kwargs)
+        return [resources.common.Description(**kwargs)
                 for kwargs in self._form_descriptions]
 
     @lazy_property
@@ -683,14 +682,14 @@ class Genus:
 
     def __init__(self, **kwargs):
         self.genus = kwargs['genus']
-        self.language = utility.NamedAPIResource(**kwargs['language'])
+        self.language = resources.common.NamedAPIResource(**kwargs['language'])
 
 
 class PokemonSpeciesDexEntry:
 
     def __init__(self, **kwargs):
         self.entry_number = kwargs['entry_number']
-        self.pokedex = utility.NamedAPIResource(**kwargs['pokedex'])
+        self.pokedex = resources.common.NamedAPIResource(**kwargs['pokedex'])
 
 
 class PalParkEncounterArea:
@@ -698,14 +697,14 @@ class PalParkEncounterArea:
     def __init__(self, **kwargs):
         self.base_score = kwargs['base_score']
         self.rate = kwargs['rate']
-        self.area = utility.NamedAPIResource(**kwargs['area'])
+        self.area = resources.common.NamedAPIResource(**kwargs['area'])
 
 
 class PokemonSpeciesVariety:
 
     def __init__(self, **kwargs):
         self.is_default = kwargs['is_default']
-        self.pokemon = utility.NamedAPIResource(**kwargs['pokemon'])
+        self.pokemon = resources.common.NamedAPIResource(**kwargs['pokemon'])
 
 
 class StatResource(utility.CacheablePropertyResource):
@@ -744,17 +743,17 @@ class StatResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def characteristics(self):
-        return [utility.APIResource(**kwargs)
+        return [resources.common.APIResource(**kwargs)
                 for kwargs in self._characteristics]
 
     @lazy_property
     def move_damage_class(self):
-        return [utility.NamedAPIResource(**kwargs)
+        return [resources.common.NamedAPIResource(**kwargs)
                 for kwargs in self._move_damage_class]
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
 
 class MoveStatAffectSets:
@@ -768,7 +767,7 @@ class MoveStatAffect:
 
     def __init__(self, **kwargs):
         self.change = kwargs['change']
-        self.move = utility.NamedAPIResource(**kwargs['move'])
+        self.move = resources.common.NamedAPIResource(**kwargs['move'])
 
 
 class NatureStatAffectSets:
@@ -834,20 +833,20 @@ class TypeResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def game_indices(self):
-        return [utility.GenerationGameIndex(**kwargs)
+        return [resources.common.GenerationGameIndex(**kwargs)
                 for kwargs in self._game_indices]
 
     @lazy_property
     def generation(self):
-        return utility.NamedAPIResource(self._generation)
+        return resources.common.NamedAPIResource(self._generation)
 
     @lazy_property
     def move_damage_class(self):
-        return utility.NamedAPIResource(self._move_damage_class)
+        return resources.common.NamedAPIResource(self._move_damage_class)
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def pokemon(self):
@@ -855,23 +854,23 @@ class TypeResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def moves(self):
-        return [utility.NamedAPIResource(**kwargs) for kwargs in self._moves]
+        return [resources.common.NamedAPIResource(**kwargs) for kwargs in self._moves]
 
 
 class TypeRelations:
 
     def __init__(self, **kwargs):
-        self.no_damage_to = [utility.NamedAPIResource(**t)
+        self.no_damage_to = [resources.common.NamedAPIResource(**t)
                              for t in kwargs['no_damage_to']]
-        self.half_damage_to = [utility.NamedAPIResource(**t)
+        self.half_damage_to = [resources.common.NamedAPIResource(**t)
                                for t in kwargs['half_damage_to']]
-        self.double_damage_to = [utility.NamedAPIResource(**t)
+        self.double_damage_to = [resources.common.NamedAPIResource(**t)
                                  for t in kwargs['double_damage_to']]
-        self.no_damage_from = [utility.NamedAPIResource(**t)
+        self.no_damage_from = [resources.common.NamedAPIResource(**t)
                                for t in kwargs['no_damage_from']]
-        self.half_damage_from = [utility.NamedAPIResource(**t)
+        self.half_damage_from = [resources.common.NamedAPIResource(**t)
                                  for t in kwargs['half_damage_from']]
-        self.double_damage_from = [utility.NamedAPIResource(**t)
+        self.double_damage_from = [resources.common.NamedAPIResource(**t)
                                    for t in kwargs['double_damage_from']]
 
 
@@ -879,7 +878,7 @@ class TypePokemon:
 
     def __init__(self, **kwargs):
         self.slot = kwargs['slot']
-        self.pokemon = utility.NamedAPIResource(**kwargs['pokemon'])
+        self.pokemon = resources.common.NamedAPIResource(**kwargs['pokemon'])
 
 
 class PokemonResource(utility.CacheablePropertyResource):
@@ -926,11 +925,11 @@ class PokemonResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def forms(self):
-        return [utility.NamedAPIResource(**kwargs) for kwargs in self._forms]
+        return [resources.common.NamedAPIResource(**kwargs) for kwargs in self._forms]
 
     @lazy_property
     def game_indices(self):
-        return [utility.VersionGameIndex(**kwargs)
+        return [resources.common.VersionGameIndex(**kwargs)
                 for kwargs in self._game_indices]
 
     @lazy_property
@@ -953,7 +952,7 @@ class PokemonResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def species(self):
-        return utility.NamedAPIResource(**self._species)
+        return resources.common.NamedAPIResource(**self._species)
 
     @property
     def stats(self):
@@ -994,7 +993,7 @@ class PokemonResource(utility.CacheablePropertyResource):
     @lazy_property
     def location_area_encounters(self):
         url = 'http://pokeapi.co' + self._location_area_encounters
-        return utility.APIResource(url=url, resource_type='encounters')
+        return resources.common.APIResource(url=url, resource_type='encounters')
 
     @staticmethod
     def get_url(url, **kwargs):
@@ -1006,7 +1005,7 @@ class PokemonResource(utility.CacheablePropertyResource):
 class PokemonAbility:
 
     def __init__(self, **kwargs):
-        self.ability = utility.NamedAPIResource(**kwargs['ability'])
+        self.ability = resources.common.NamedAPIResource(**kwargs['ability'])
         self.slot = kwargs['slot']
         self.is_hidden = kwargs['is_hidden']
 
@@ -1030,7 +1029,7 @@ class PokemonAbility:
 class PokemonType:
 
     def __init__(self, **kwargs):
-        self.type = utility.NamedAPIResource(**kwargs['type'])
+        self.type = resources.common.NamedAPIResource(**kwargs['type'])
         self.slot = kwargs.get('slot')
 
     @property
@@ -1053,7 +1052,7 @@ class PokemonType:
 class PokemonHeldItemVersion:
 
     def __init__(self, **kwargs):
-        self.version = utility.NamedAPIResource(**kwargs['version'])
+        self.version = resources.common.NamedAPIResource(**kwargs['version'])
         self.rarity = kwargs['rarity']
 
     @property
@@ -1072,7 +1071,7 @@ class PokemonHeldItemVersion:
 class PokemonHeldItem:
 
     def __init__(self, **kwargs):
-        self.item = utility.NamedAPIResource(**kwargs['item'])
+        self.item = resources.common.NamedAPIResource(**kwargs['item'])
         self.version_details = [PokemonHeldItemVersion(**d)
                                 for d in kwargs['version_details']]
         self.version_dict = {}
@@ -1106,10 +1105,10 @@ class PokemonHeldItem:
 class PokemonMoveVersion:
 
     def __init__(self, **kwargs):
-        self.move_learn_method = utility.NamedAPIResource(
+        self.move_learn_method = resources.common.NamedAPIResource(
             **kwargs['move_learn_method']
         )
-        self.version_group = utility.NamedAPIResource(**kwargs['version_group'])
+        self.version_group = resources.common.NamedAPIResource(**kwargs['version_group'])
         self.level_learned_at = kwargs['level_learned_at']
 
     @property
@@ -1124,7 +1123,7 @@ class PokemonMoveVersion:
 class PokemonMove:
 
     def __init__(self, **kwargs):
-        self.move = utility.NamedAPIResource(**kwargs['move'])
+        self.move = resources.common.NamedAPIResource(**kwargs['move'])
         self.version_group_details = [PokemonMoveVersion(**v) for v in
                                       kwargs['version_group_details']]
 
@@ -1144,7 +1143,7 @@ class PokemonMove:
 class PokemonStat:
 
     def __init__(self, **kwargs):
-        self.stat = utility.NamedAPIResource(**kwargs['stat'])
+        self.stat = resources.common.NamedAPIResource(**kwargs['stat'])
         self.effort = kwargs['effort']
         self.base_stat = kwargs['base_stat']
 
@@ -1177,6 +1176,6 @@ class PokemonSprites:
 class LocationAreaEncounter:
 
     def __init__(self, **kwargs):
-        self.location_area = utility.NamedAPIResource(**kwargs['location_area'])
-        self.version_details = [utility.VersionEncounterDetail(**deet)
+        self.location_area = resources.common.NamedAPIResource(**kwargs['location_area'])
+        self.version_details = [resources.common.VersionEncounterDetail(**deet)
                                 for deet in kwargs['version_details']]

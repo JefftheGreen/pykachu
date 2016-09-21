@@ -1,11 +1,11 @@
 # /usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from resources.utility import lazy_property
+import resources.common
+from universal import lazy_property
 import resources.utility as utility
 
 
-class Berry(utility.CacheablePropertyResource):
+class BerryResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!BerryResource'
 
@@ -31,7 +31,7 @@ class Berry(utility.CacheablePropertyResource):
 
     @lazy_property
     def firmness(self):
-        return utility.NamedAPIResource(**self._firmness)
+        return resources.common.NamedAPIResource(**self._firmness)
 
     @lazy_property
     def flavors(self):
@@ -39,18 +39,18 @@ class Berry(utility.CacheablePropertyResource):
 
     @lazy_property
     def item(self):
-        return utility.NamedAPIResource(**self._item)
+        return resources.common.NamedAPIResource(**self._item)
 
     @lazy_property
     def natural_gift_type(self):
-        return utility.NamedAPIResource(**self._natural_gift_type)
+        return resources.common.NamedAPIResource(**self._natural_gift_type)
 
 
 class BerryFlavorMap:
 
     def __init__(self, **kwargs):
         self.potency = kwargs['potency']
-        self.flavor = utility.NamedAPIResource(**kwargs['flavor'])
+        self.flavor = resources.common.NamedAPIResource(**kwargs['flavor'])
 
     @property
     def resource(self):
@@ -75,11 +75,11 @@ class BerryFirmnessResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def berries(self):
-        return [utility.NamedAPIResource(**kwargs) for kwargs in self._berries]
+        return [resources.common.NamedAPIResource(**kwargs) for kwargs in self._berries]
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
 
 class BerryFlavorResource(utility.CacheablePropertyResource):
@@ -105,18 +105,18 @@ class BerryFlavorResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def contest_type(self):
-        return utility.NamedAPIResource(**self._contest_type)
+        return resources.common.NamedAPIResource(**self._contest_type)
 
     @lazy_property
     def names(self):
-        return [utility.Name(**kwargs) for kwargs in self._names]
+        return [resources.common.Name(**kwargs) for kwargs in self._names]
 
 
 class FlavorBerryMap:
 
     def __init__(self, kwargs):
         self.potency = kwargs['potency']
-        self.berry = utility.NamedAPIResource(**kwargs['berry'])
+        self.berry = resources.common.NamedAPIResource(**kwargs['berry'])
 
     @property
     def resource(self):
