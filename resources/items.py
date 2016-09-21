@@ -60,9 +60,6 @@ class ItemResource(utility.CacheablePropertyResource):
         return [common.GenerationGameIndex(**kwargs) 
                 for kwargs in self._game_indices]
 
-    @lazy_property
-    def names(self):
-        return [common.Name(**kwargs) for kwargs in self._names]
 
     @lazy_property
     def sprites(self):
@@ -110,7 +107,7 @@ class ItemAttributeResource(utility.CacheablePropertyResource):
     class Meta:
         name = "Item Attribute"
         resource_name = "item-attribute"
-        cache_folder = 'items/item-attributes/'
+        cache_folder = 'items/attributes/'
         identifier = 'id'
         attributes = (
             'id',
@@ -122,4 +119,88 @@ class ItemAttributeResource(utility.CacheablePropertyResource):
 
 
     @lazy_property
-    def
+    def items(self):
+        return [common.NamedAPIResource(**kwargs) for kwargs in self._items]
+
+
+
+    @lazy_property
+    def descriptions(self):
+        return [common.Description(**kwargs) for kwargs in self._descriptions]
+
+
+class ItemCategoryResource(utility.CacheablePropertyResource):
+
+    yaml_tag = '!ItemCategoryResource'
+
+    class Meta:
+        name = "Item Category"
+        resource_name = "item-category"
+        cache_folder = 'items/categories/'
+        identifier = 'id'
+        attributes = (
+            'id',
+            'name',
+            'items',
+            'names',
+            'pocket'
+        )
+
+    @lazy_property
+    def items(self):
+        return [common.NamedAPIResource(**kwargs) for kwargs in self._items]
+
+
+
+    @lazy_property
+    def pocket(self):
+        return common.NamedAPIResource(**self._pocket)
+
+
+class ItemFlingEffectResource(utility.CacheablePropertyResource):
+
+    yaml_tag = '!ItemFlingEffectResource'
+
+    class Meta:
+        name = "Item Fling Effect"
+        resource_name = "item-fling-effect"
+        cache_folder = 'items/fling-effect/'
+        identifier = 'id'
+        attributes = (
+            'id',
+            'name',
+            'effect_entries',
+            'items'
+        )
+
+    @lazy_property
+    def effect_entries(self):
+        return [common.Effect(**kwargs) for kwargs in self._effect_entries]
+
+    @lazy_property
+    def items(self):
+        return [common.NamedAPIResource(**kwargs) for kwargs in self._items]
+
+
+class ItemPocketResource(utility.CacheablePropertyResource):
+
+    yaml_tag = '!ItemPocketResource'
+
+    class Meta:
+        name = "Item Pocket"
+        resource_name = "item-pocket"
+        cache_folder = 'items/pockets/'
+        identifier = 'id'
+        attributes = (
+            'id',
+            'name',
+            'categories',
+            'names'
+        )
+
+    @lazy_property
+    def categories(self):
+        return [common.NamedAPIResource(**kwargs)
+                for kwargs in self._categoriee]
+
+

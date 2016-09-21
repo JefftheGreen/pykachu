@@ -109,3 +109,11 @@ class VersionGroupFlavorText:
         self.text = kwargs['text']
         self.language = NamedAPIResource(**kwargs['language'])
         self.version_group = NamedAPIResource(**kwargs['version_group'])
+
+
+class EffectChange:
+
+    def __init__(self, **kwargs):
+        self.effect_entries = [Effect(**entry)
+                               for entry in kwargs['effect_entries']]
+        self.version_group = NamedAPIResource(**kwargs['version_group'])

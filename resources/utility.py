@@ -3,7 +3,8 @@
 
 import yaml
 from beckett import resources
-import functools
+from resources.common import lazy_property
+import resources.common as common
 
 
 class CacheableResource(resources.BaseResource, yaml.YAMLObject):
@@ -44,7 +45,24 @@ class PropertyResource(resources.BaseResource):
 
 class CacheablePropertyResource(PropertyResource, CacheableResource):
 
-    pass
+    @lazy_property
+    def names(self):
+        if hasattr(self, '_names'):
+            return [common.Name(**kwargs) for kwargs in self._names]
+        else:
+            raise AttributeError(
+                "'{}' object has no attribute 'names'".format(type(self))
+            )
+
+    @lazy_property
+    def descriptions(self):
+        if hasattr(self, '_descriptions'):
+            return [common.Description(**kwargs)
+                    for kwargs in self._descriptions]
+        else:
+            raise AttributeError(
+                "'{}' object has no attribute 'descriptions'".format(type(self))
+            )
 
 
 class LanguageResource(CacheableResource):
