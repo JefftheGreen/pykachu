@@ -11,6 +11,17 @@ import os
 import gzip
 
 
+def set_up():
+    if not os.path.isdir(get_cache_dir()):
+        os.makedirs(get_cache_dir())
+    # Make the expiration catalog if it doesn't exist
+    if not os.path.isfile(get_cache_dir() + 'expiration.cnf'):
+        open(get_cache_dir() + 'expiration.cnf', 'a').close()
+    # Make the path catalog if it doesn't exist
+    if not os.path.isfile(get_cache_dir() + 'paths.cnf'):
+        open(get_cache_dir() + 'paths.cnf', 'a').close()
+
+
 # Returns the cache directory as a string.
 def get_cache_dir():
     # if the cache directory has been set in the config file, use that.
@@ -110,6 +121,9 @@ def get_compression():
 # resource type with one member) or, if the file can't be read or doesn't
 # exist, None.
 def read_cache(category=None, id=None, file_name=None):
+    if check_expiration(category, id):
+        os.remove(file_name)
+        return None
     if not file_name:
         file_name = get_file_path(category, id)
     # if our cache setting is to compress, assume the file is compressed
@@ -154,18 +168,22 @@ def read_cache(category=None, id=None, file_name=None):
 #       Where in the cache folder to put the resource.
 # Either category and id or file_name must be provided. Category and id only
 # work if the file already exists and is being rewritten
-def write_cache(result, category=None, id=None, file_name=None):
+def write_cache(resource, category=None, id=None, file_name=None):
     if not file_name:
         file_name = get_file_path(category, id)
     # TODO: Make this threaded
     print(file_name)
-    cached = yaml.dump_all([result], Dumper=yaml.CSafeDumper)
+    cached = yaml.dump_all([resource], Dumper=yaml.CSafeDumper)
     if get_compression():
         with gzip.open(file_name, mode='wb', compresslevel=6) as file:
             file.write(cached.encode())
     else:
         with open(file_name, mode='w+') as file:
             print(cached, file=file)
+    if not (category and id):
+        category = resource.Meta.name.lower()
+        id = resource.id
+    set_expiration(category, id)
     # If we've gone over the maximum size, clean the cache to reduce it.
     if get_size() > get_max_size():
         clean()
@@ -191,7 +209,7 @@ def get_file_path(category, id):
 
 def set_file_path(category, id, path):
     cache_dir = get_cache_dir()
-    # Make the expiration catalog if it doesn't exist
+    # Make the path catalog if it doesn't exist
     if not os.path.isfile(get_cache_dir() + 'paths.cnf'):
         open(cache_dir + 'paths.cnf', 'a').close()
     # Load the expiration catalog

@@ -4,13 +4,55 @@
 from beckett import clients
 import os
 import cache
-from resources import (AbilityResource, CharacteristicResource,
-                       EggGroupResource, GenderResource, GrowthRateResource,
-                       NatureResource, PokeathlonStatResource,
-                       PokemonColorResource, PokemonFormResource,
-                       PokemonHabitatResource, PokemonShapeResource,
-                       PokemonSpeciesResource, StatResource, TypeResource,
-                       PokemonResource)
+from resources import (
+    AbilityResource,
+    BerryResource,
+    BerryFirmnessResource,
+    BerryFlavorResource,
+    CharacteristicResource,
+    ContestTypeResource,
+    ContestEffectResource,
+    EggGroupResource,
+    EncounterMethodResource,
+    EncounterConditionResource,
+    EncounterConditionValueResource,
+    EvolutionChainResource,
+    EvolutionTriggerResource,
+    GenderResource,
+    GenerationResource,
+    GrowthRateResource,
+    ItemResource,
+    ItemAttributeResource,
+    ItemCategoryResource,
+    ItemFlingEffectResource,
+    ItemPocketResource,
+    LocationResource,
+    LocationAreaResource,
+    MachineResource,
+    MoveResource,
+    MoveAilmentResource,
+    MoveBattleStyleResource,
+    MoveCategoryResource,
+    MoveDamageClassResource,
+    MoveLearnMethodResource,
+    MoveTargetsResource,
+    NatureResource,
+    PalParkAreaResource,
+    PokeathlonStatResource,
+    PokedexResource,
+    PokemonResource,
+    PokemonColorResource,
+    PokemonFormResource,
+    PokemonHabitatResource,
+    PokemonShapeResource,
+    PokemonSpeciesResource,
+    RegionResource,
+    StatResource,
+    SuperContestEffectResource,
+    TypeResource,
+    VersionResource,
+    VersionGroupResource
+)
 
 
 class BeckettClient(clients.BaseClient):
@@ -19,20 +61,52 @@ class BeckettClient(clients.BaseClient):
         base_url = "http://pokeapi.co/api/v2"
         resources = (
             AbilityResource,
+            BerryResource,
+            BerryFirmnessResource,
+            BerryFlavorResource,
             CharacteristicResource,
+            ContestTypeResource,
+            ContestEffectResource,
             EggGroupResource,
+            EncounterMethodResource,
+            EncounterConditionResource,
+            EncounterConditionValueResource,
+            EvolutionChainResource,
+            EvolutionTriggerResource,
             GenderResource,
+            GenerationResource,
             GrowthRateResource,
+            ItemResource,
+            ItemAttributeResource,
+            ItemCategoryResource,
+            ItemFlingEffectResource,
+            ItemPocketResource,
+            LocationResource,
+            LocationAreaResource,
+            MachineResource,
+            MoveResource,
+            MoveAilmentResource,
+            MoveBattleStyleResource,
+            MoveCategoryResource,
+            MoveDamageClassResource,
+            MoveLearnMethodResource,
+            MoveTargetsResource,
             NatureResource,
+            PalParkAreaResource,
             PokeathlonStatResource,
+            PokedexResource,
+            PokemonResource,
             PokemonColorResource,
             PokemonFormResource,
             PokemonHabitatResource,
             PokemonShapeResource,
             PokemonSpeciesResource,
+            RegionResource,
             StatResource,
+            SuperContestEffectResource,
             TypeResource,
-            PokemonResource
+            VersionResource,
+            VersionGroupResource
         )
 
 
@@ -51,8 +125,7 @@ class PokemonClient():
         self.read = read_cache
         self.write = write_cache
         if self.read or self.write:
-            if not os.path.isdir(cache.get_cache_dir()):
-                os.makedirs(cache.get_cache_dir())
+            cache.set_up()
         self.set_attributes()
 
     def set_attributes(self):
@@ -93,19 +166,19 @@ class PokemonClient():
                 file_name = cache_subdir + str(resource_id)
             # We can'read unless the file actually exists
             if self.read and os.path.isfile(file_name):
-                if cache.check_expiration(resource.Meta.name.lower(),
-                                         resource_id):
-                    os.remove(file_name)
-                else:
-                    return cache.read_cache(file_name=file_name)
+                read_result = cache.read_cache(
+                    category=resource.Meta.name.lower(),
+                    id=resource_id, file_name=file_name)
+                if read_result:
+                    return read_result
             # There's nothing from the cache, so call Pokeapi
             beckett_result = beckett_method(**kwargs)
             # Write to the cache.
             if self.write:
-                cache.write_cache(beckett_result, file_name=file_name)
-                # Set the expiration date for this cached file.
-                cache.set_expiration(resource.Meta.name.lower(),
-                                     resource_id)
+                cache.write_cache(beckett_result,
+                                  category=resource.Meta.name.lower(),
+                                  id=resource_id,
+                                  file_name=file_name)
             return beckett_result
 
         return get
