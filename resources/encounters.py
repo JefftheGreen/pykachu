@@ -1,10 +1,8 @@
 # /usr/bin/env python
 # -*- coding: utf-8 -*
 
-import requests
-
 import resources.common
-import universal as utility
+import resources.utility as utility
 from universal import lazy_property
 
 
@@ -34,7 +32,7 @@ class EncounterMethodResource(utility.CacheablePropertyResource):
         return [resources.common.Name(**kwargs) for kwargs in self._names]
 
 
-class EcounterCondition(utility.CacheablePropertyResource):
+class EncounterConditionResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!EncounterConditionResource'
 

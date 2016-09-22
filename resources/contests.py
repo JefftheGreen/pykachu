@@ -65,7 +65,7 @@ class ContestEffectResource(utility.CacheablePropertyResource):
                 for kwargs in self._flavor_text_entries]
 
 
-class SuperContestEffect(utility.CacheablePropertyResource):
+class SuperContestEffectResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!SuperContestEffectResource'
 

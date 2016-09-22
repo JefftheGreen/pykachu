@@ -185,8 +185,6 @@ class MoveAilmentResource(utility.CacheablePropertyResource):
         return [common.NamedAPIResource(**kwargs) for kwargs in self._moves]
 
 
-
-
 class MoveBattleStyleResource(utility.CacheablePropertyResource):
 
     yaml_tag = '!MoveBattleStyleResource'
@@ -201,8 +199,6 @@ class MoveBattleStyleResource(utility.CacheablePropertyResource):
             'name',
             'names'
         )
-
-
 
 
 class MoveCategoryResource(utility.CacheablePropertyResource):
@@ -254,8 +250,6 @@ class MoveDamageClassResource(utility.CacheablePropertyResource):
     @lazy_property
     def moves(self):
         return [common.NamedAPIResource(**kwargs) for kwargs in self._moves]
-
-
 
 
 class MoveLearnMethodResource(utility.CacheablePropertyResource):
