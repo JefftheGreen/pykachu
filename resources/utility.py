@@ -5,6 +5,7 @@ import yaml
 from beckett import resources
 from resources.common import lazy_property
 import resources.common as common
+import collections
 
 
 class CacheableResource(resources.BaseResource, yaml.YAMLObject):
@@ -21,13 +22,15 @@ class CacheableResource(resources.BaseResource, yaml.YAMLObject):
 
 class PropertyResource(resources.BaseResource):
 
+    attr_docs = collections.defaultdict(lambda: 'My docstring.')
+
     def set_attributes(self, **kwargs):
         """
         Set the resource attributes from the kwargs.
         Only sets items in the `self.Meta.attributes` white list.
         Subclass this method to customise attributes.
         Args:
-            kwargs: Keyword arguements passed into the init of this class
+            kwargs: Keyword arguments passed into the init of this class
         """
         if self._subresource_map:
             self.set_subresources(**kwargs)
@@ -37,10 +40,11 @@ class PropertyResource(resources.BaseResource):
         for field, value in kwargs.items():
             if field in self.Meta.attributes:
                 if field in dir(self):
-                    setattr(self, "_" + field, value)
-                    setattr(self, field + "__cached", None)
+                    field_name = "_" + field
                 else:
-                    setattr(self, field, value)
+                    field_name = field
+                setattr(self, field_name, value)
+
 
 
 class CacheablePropertyResource(PropertyResource, CacheableResource):

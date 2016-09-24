@@ -23,6 +23,12 @@ class LocationResource(utility.CacheablePropertyResource):
             'game_indices',
             'areas'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def region(self):
@@ -54,6 +60,12 @@ class LocationAreaResource(utility.CacheablePropertyResource):
             'encounter_method_rates',
             'location',
             'pokemon_encounters'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property
@@ -110,6 +122,12 @@ class PalParkAreaResource(utility.CacheablePropertyResource):
             'names',
             'pokemon_encounters'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def pokemon_encounters(self):
@@ -143,6 +161,12 @@ class RegionResource(utility.CacheablePropertyResource):
             'names',
             'pokedexes',
             'version_groups'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property

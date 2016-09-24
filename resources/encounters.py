@@ -26,6 +26,12 @@ class EncounterMethodResource(utility.CacheablePropertyResource):
         methods = (
             'get',
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def names(self):
@@ -46,6 +52,12 @@ class EncounterConditionResource(utility.CacheablePropertyResource):
             'name',
             'names',
             'values'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property
@@ -71,6 +83,12 @@ class EncounterConditionValueResource(utility.CacheablePropertyResource):
             'name',
             'names',
             'condition'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property

@@ -31,6 +31,12 @@ class ItemResource(utility.CacheablePropertyResource):
             'baby_trigger_for',
             'machines'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def fling_effect(self):
@@ -116,6 +122,12 @@ class ItemAttributeResource(utility.CacheablePropertyResource):
             'names',
             'descriptions'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
 
     @lazy_property
@@ -145,6 +157,12 @@ class ItemCategoryResource(utility.CacheablePropertyResource):
             'names',
             'pocket'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def items(self):
@@ -172,6 +190,12 @@ class ItemFlingEffectResource(utility.CacheablePropertyResource):
             'effect_entries',
             'items'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def effect_entries(self):
@@ -196,6 +220,12 @@ class ItemPocketResource(utility.CacheablePropertyResource):
             'name',
             'categories',
             'names'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property

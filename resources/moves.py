@@ -38,6 +38,12 @@ class MoveResource(utility.CacheablePropertyResource):
             'target',
             'type'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def contest_combos(self):
@@ -179,6 +185,12 @@ class MoveAilmentResource(utility.CacheablePropertyResource):
             'moves',
             'names'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def moves(self):
@@ -199,6 +211,12 @@ class MoveBattleStyleResource(utility.CacheablePropertyResource):
             'name',
             'names'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
 
 class MoveCategoryResource(utility.CacheablePropertyResource):
@@ -215,6 +233,12 @@ class MoveCategoryResource(utility.CacheablePropertyResource):
             'name',
             'moves',
             'descriptions'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property
@@ -242,6 +266,12 @@ class MoveDamageClassResource(utility.CacheablePropertyResource):
             'moves',
             'names'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def descriptions(self):
@@ -267,6 +297,12 @@ class MoveLearnMethodResource(utility.CacheablePropertyResource):
             'descriptions',
             'names',
             'version_groups'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property
@@ -296,6 +332,12 @@ class MoveTargetsResource(utility.CacheablePropertyResource):
             'descriptions',
             'moves',
             'names'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property

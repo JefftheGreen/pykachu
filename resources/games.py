@@ -25,6 +25,12 @@ class GenerationResource(utility.CacheablePropertyResource):
             'types',
             'version_groups'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def abilities(self):
@@ -77,6 +83,12 @@ class PokedexResource(utility.CacheablePropertyResource):
             'region',
             'version_groups'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def descriptions(self):
@@ -122,6 +134,12 @@ class VersionResource(utility.CacheablePropertyResource):
             'names',
             'version_group'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def names(self):
@@ -150,6 +168,12 @@ class VersionGroupResource(utility.CacheablePropertyResource):
             'pokedexes',
             'regions',
             'versions'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property

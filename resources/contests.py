@@ -20,6 +20,12 @@ class ContestTypeResource(utility.CacheablePropertyResource):
             'berry_flavor',
             'names'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def berry_flavor(self):
@@ -54,6 +60,12 @@ class ContestEffectResource(utility.CacheablePropertyResource):
             'effect_entries',
             'flavor_text_entries'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def effect_entries(self):
@@ -79,6 +91,12 @@ class SuperContestEffectResource(utility.CacheablePropertyResource):
             'appeal',
             'flavor_text_entries',
             'moves'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property

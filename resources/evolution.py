@@ -18,6 +18,12 @@ class EvolutionChainResource(utility.CacheablePropertyResource):
             'baby_trigger_item',
             'chain'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def baby_trigger_item(self):
@@ -85,6 +91,12 @@ class EvolutionTriggerResource(utility.CacheablePropertyResource):
             'name',
             'names',
             'pokemon_species'
+        )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
         )
 
     @lazy_property

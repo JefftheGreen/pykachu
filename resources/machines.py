@@ -20,6 +20,12 @@ class MachineResource(utility.CacheablePropertyResource):
             'move',
             'version_group'
         )
+        valid_status_codes = (
+            200,
+        )
+        methods = (
+            'get',
+        )
 
     @lazy_property
     def item(self):
