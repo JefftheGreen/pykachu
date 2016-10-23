@@ -15,11 +15,11 @@ def set_up():
     if not os.path.isdir(get_cache_dir()):
         os.makedirs(get_cache_dir())
     # Make the expiration catalog if it doesn't exist
-    if not os.path.isfile(get_cache_dir() + 'expiration.cnf'):
-        open(get_cache_dir() + 'expiration.cnf', 'a').close()
+    if not os.path.isfile(os.path.join(get_cache_dir(),'expiration.cnf')):
+        open(os.path.join(get_cache_dir, 'expiration.cnf'), 'a').close()
     # Make the path catalog if it doesn't exist
-    if not os.path.isfile(get_cache_dir() + 'paths.cnf'):
-        open(get_cache_dir() + 'paths.cnf', 'a').close()
+    if not os.path.isfile(os.path.join(get_cache_dir(), 'paths.cnf')):
+        open(os.path.join(get_cache_dir(), 'paths.cnf'), 'a').close()
 
 
 # Returns the cache directory as a string.
@@ -118,12 +118,14 @@ def get_compression():
 #       the file name for the file to read.
 # Either category and id or file_name must be provided
 # Returns either the contents of the cache file (usually a list of a
-# resource type with one member) or, if the file can't be read or doesn't
-# exist, None.
-def read_cache(category=None, id=None, file_name=None):
+# resource type with one member) or, if the file can't be read, doesn't
+# exist, or is expired, None.
+def read_cache(category, id, file_name=None):
+    # If the file is expired, remove it and return None
     if check_expiration(category, id):
         os.remove(file_name)
         return None
+    # Get the file name if not provided
     if not file_name:
         file_name = get_file_path(category, id)
     # if our cache setting is to compress, assume the file is compressed
@@ -174,12 +176,15 @@ def write_cache(resource, category=None, id=None, file_name=None):
     # TODO: Make this threaded
     print(file_name)
     cached = yaml.dump_all([resource], Dumper=yaml.CSafeDumper)
+    # If using compression, write the file with gzip
     if get_compression():
         with gzip.open(file_name, mode='wb', compresslevel=6) as file:
             file.write(cached.encode())
+    # Not using compression, so write normally
     else:
         with open(file_name, mode='w+') as file:
             print(cached, file=file)
+    # Get the category and id if not provided
     if not (category and id):
         category = resource.Meta.name.lower()
         id = resource.id
@@ -206,6 +211,7 @@ def get_file_path(category, id):
             else:
                 return None
     return None
+
 
 def set_file_path(category, id, path):
     cache_dir = get_cache_dir()
@@ -238,16 +244,18 @@ def set_file_path(category, id, path):
 def set_expiration(category, id):
     # Make the expiration catalog if it doesn't exist
     if not os.path.isfile(get_cache_dir() + 'expiration.cnf'):
-        open(get_cache_dir() + 'expiration.cnf', 'a').close()
+        open(os.path.join(get_cache_dir(), 'expiration.cnf'), 'a').close()
     # Load the expiration catalog
     parser = configparser.ConfigParser()
-    file_path = get_cache_dir() + 'expiration.cnf'
+    file_path = os.path.join(get_cache_dir(), 'expiration.cnf')
     parser.read(file_path)
     # The expiration date is a fixed distance into the future.
     date = datetime.now() + get_expiration_length()
     # Set the date in the catalog
     if category not in parser:
         parser[category] = {}
+    # Turn the expiration date into a string and put it in the expiration
+    # catalog.
     parser[category][str(id)] = datetime.isoformat(date, sep=':')
     with open(file_path, 'w+') as expir_file:
         parser.write(expir_file)
@@ -260,18 +268,21 @@ def set_expiration(category, id):
 #       the id of the cached resource.
 def check_expiration(category, id):
     expiration = get_expiration(category, id)
+    # If the expiration has been set and the expiration date is in teh past,
+    # return True
     if expiration:
         if datetime.now() > expiration:
             return True
     return False
 
+
 def get_expiration(category, id):
     # If the expiration catalog doesn't exist, nothing can be expired
-    if not os.path.isfile(get_cache_dir() + 'expiration.cnf'):
-        None
-    # Read the catalo
+    if not os.path.isfile(os.path.join(get_cache_dir(), 'expiration.cnf')):
+        return None
+    # Read the cataloo
     parser = configparser.ConfigParser()
-    parser.read(get_cache_dir() + 'expiration.cnf')
+    parser.read(os.path.join(get_cache_dir(), 'expiration.cnf'))
     if category in parser.sections():
         # The resource has to be in the catalog to be expired.
         if str(id) in parser[category]:
@@ -282,14 +293,16 @@ def get_expiration(category, id):
             return expir_date
     return None
 
+
 def get_file_size(category, id):
     return os.stat(get_file_path(category, id)).st_size
+
 
 def clean():
     # First, collect all files while removing expired ones
     all_files = []
     paths_parser = configparser.ConfigParser()
-    paths_parser.read(get_cache_dir() + 'paths.cnf')
+    paths_parser.read(os.path.join(get_cache_dir(), 'paths.cnf'))
     # Loop through each file stored in the paths category
     for category in paths_parser.sections():
         for id in paths_parser[category]:
@@ -307,7 +320,7 @@ def clean():
                                       'id': id,
                                       'path': path,
                                       'size': size,
-                                      'expiration' :expiration})
+                                      'expiration': expiration})
             # The file doesn't exist, so remove it from the paths catalog
             else:
                 paths_parser.remove_option(category, id)
@@ -337,7 +350,7 @@ def clean():
             if not file_path in known_paths:
                 os.remove(file_path)
     # Finally, remove expiration entries to non-existent files
-    if os.path.isfile(get_cache_dir() + 'expiration.cnf'):
+    if os.path.isfile(os.path.join(get_cache_dir(), 'expiration.cnf')):
         expiration_parser = configparser.ConfigParser()
         # Loop through expiration entries
         for category in expiration_parser.sections():
@@ -358,9 +371,9 @@ def clean():
 #       category and id.
 def remove_file(category, id, path=None):
     path_parser = configparser.ConfigParser()
-    path_parser.read(get_cache_dir() + 'paths.cnf')
+    path_parser.read(os.path.join(get_cache_dir(), 'paths.cnf'))
     expiration_parser = configparser.ConfigParser()
-    expiration_parser.read(get_cache_dir() + 'expiration.cnf')
+    expiration_parser.read(os.path.join(get_cache_dir(), 'expiration.cnf'))
     # Get the path from the paths catalog if it wasn't provided
     if not path:
         path = path_parser[category][str(id)]

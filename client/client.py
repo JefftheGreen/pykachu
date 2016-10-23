@@ -181,6 +181,8 @@ class PokemonClient():
                                   file_name=file_name)
             return beckett_result
 
+        get.__doc__ = resource.attr_docs[resource.Meta.name.lower()]
+
         return get
 
     def identifier(self, resource=None, uid=None):
