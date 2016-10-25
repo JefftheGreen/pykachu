@@ -16,7 +16,7 @@ def set_up():
         os.makedirs(get_cache_dir())
     # Make the expiration catalog if it doesn't exist
     if not os.path.isfile(os.path.join(get_cache_dir(),'expiration.cnf')):
-        open(os.path.join(get_cache_dir, 'expiration.cnf'), 'a').close()
+        open(os.path.join(get_cache_dir(), 'expiration.cnf'), 'a').close()
     # Make the path catalog if it doesn't exist
     if not os.path.isfile(os.path.join(get_cache_dir(), 'paths.cnf')):
         open(os.path.join(get_cache_dir(), 'paths.cnf'), 'a').close()

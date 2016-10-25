@@ -5,6 +5,21 @@ from universal import lazy_property
 
 
 class APIResource:
+    """
+    A class that points to a resource that needs to be retrieved from the
+    API. 
+
+    Attributes:
+        url (str)
+            The url of the resource the object points to.
+        resource_type (str)
+            The type of resource the object points to.
+        id (str)
+            The id of the resource.
+        resource (property)
+            When first requested, calls the API for the resource the object points
+            to. It is cached and returned.
+    """
 
     def __init__(self, url, resource_type=None):
         self.url = url
@@ -12,15 +27,25 @@ class APIResource:
             else self.url.split('/')[-3]
         self.id = self.url.split('/')[-2]
 
+    # The API
     @lazy_property
     def resource(self):
         poke_client = client.PokemonClient()
-        resource =  getattr(poke_client,
-                            'get_' + self.resource_type)(uid=self.id)
+        resource = getattr(poke_client, 
+                           'get_' + self.resource_type)(uid=self.id)
         return resource
 
 
 class Description:
+    """
+    A class containing a description of a resource in a given language
+        Fields:
+            description (str)
+                The localized description for an API resource in a specific
+                language
+            language (NamedAPIResource -> Language)
+                The language this name is in
+    """
 
     def __init__(self, **kwargs):
         self.description = kwargs['description']
@@ -28,6 +53,15 @@ class Description:
 
 
 class Effect:
+    """
+    A class containing an effect description in a given langauge
+        Fields:
+            effect (str)
+                The localized effect text for an API resource in a specific
+                language
+            language (NamedAPIResource -> Language)
+                The language this effect is in
+    """
 
     def __init__(self, **kwargs):
         self.effect = kwargs['effect']
@@ -35,6 +69,18 @@ class Effect:
 
 
 class Encounter:
+    """
+    A class describing a possible wild pokemon encounter.
+        Fields:
+            min_level (int)
+                The lowest level the Pokémon could be encountered at
+            max_level (int)
+                The highest level the Pokémon could be encountered at
+            condition_values (list of
+            NamedAPIResource -> EncounterConditionValue)
+                A list of condition values that must be in effect for this
+                encounter to occur
+    """
 
     def __init__(self, **kwargs):
         self.min_level = kwargs['min_level']
@@ -45,6 +91,15 @@ class Encounter:
 
 
 class FlavorText:
+    """
+    A class containing flavor text in a given language
+        Fields:
+            flavor_text (str)
+                The localized flavor text for an API resource in a specific
+                language
+            language (NamedAPIResource -> Language)
+                The language this name is in
+    """
 
     def __init__(self, **kwargs):
         self.flavor_text = kwargs['flavor_text']
@@ -52,6 +107,9 @@ class FlavorText:
 
 
 class GenerationGameIndex:
+    """
+    A class
+    """
 
     def __init__(self, **kwargs):
         self.index = kwargs['index']
