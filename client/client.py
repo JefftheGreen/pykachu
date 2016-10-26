@@ -145,7 +145,7 @@ class PokemonClient():
         # Where the cache is located.
         cache_dir = cache.get_cache_dir()
         # Where the resource is cached
-        cache_subdir = cache_dir + resource.Meta.cache_folder
+        cache_subdir = os.path.join(cache_dir, resource.Meta.cache_folder)
         # The method used to get the resource from Pokeapi
         beckett_method = getattr(self.beckett_client, method_name)
 
@@ -163,7 +163,7 @@ class PokemonClient():
                 if not os.path.isdir(cache_subdir):
                     os.makedirs(cache_subdir)
                 # This is the file that will be read or written to.
-                file_name = cache_subdir + str(resource_id)
+                file_name = os.path.join(cache_subdir, str(resource_id))
             # We can'read unless the file actually exists
             if self.read and os.path.isfile(file_name):
                 read_result = cache.read_cache(
@@ -186,8 +186,10 @@ class PokemonClient():
         return get
 
     def identifier(self, resource=None, uid=None):
+        # TODO: find identifier for unspecified
         if uid:
             return uid
 
     def alternate_identifiers(self, category=None, id=None, resource=None):
+        # TODO: find alternate identifiers
         pass

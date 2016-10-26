@@ -174,7 +174,6 @@ def write_cache(resource, category=None, id=None, file_name=None):
     if not file_name:
         file_name = get_file_path(category, id)
     # TODO: Make this threaded
-    print(file_name)
     cached = yaml.dump_all([resource], Dumper=yaml.CSafeDumper)
     # If using compression, write the file with gzip
     if get_compression():
@@ -195,11 +194,11 @@ def write_cache(resource, category=None, id=None, file_name=None):
 
 def get_file_path(category, id):
     # If the path catalog doesn't exist, nothing has a path
-    if not os.path.isfile(get_cache_dir() + 'paths.cnf'):
+    if not os.path.isfile(os.path.join(get_cache_dir(), 'paths.cnf')):
         return None
     # Read the catalog
     parser = configparser.ConfigParser()
-    parser.read(get_cache_dir() + 'paths.cnf')
+    parser.read(os.path.join(get_cache_dir(), 'paths.cnf'))
     if category in parser.sections():
         # Check that the file exists in the path catalog.
         if str(id) in parser[category]:
@@ -216,15 +215,15 @@ def get_file_path(category, id):
 def set_file_path(category, id, path):
     cache_dir = get_cache_dir()
     # Make the path catalog if it doesn't exist
-    if not os.path.isfile(get_cache_dir() + 'paths.cnf'):
-        open(cache_dir + 'paths.cnf', 'a').close()
+    if not os.path.isfile(os.path.join(get_cache_dir(), 'paths.cnf')):
+        open(os.path.join(cache_dir, 'paths.cnf'), 'a').close()
     # Load the expiration catalog
     parser = configparser.ConfigParser()
-    file_path = cache_dir + 'paths.cnf'
+    file_path = os.path.join(cache_dir, 'paths.cnf')
     parser.read(file_path)
     # If the path doesn't include the cache directory, add it on
     if not cache_dir in path:
-        path = cache_dir + path
+        path = os.path.join(cache_dir, path)
     # Check that the file actually exists
     if not os.path.isfile(path):
         raise AttributeError('File {} cannot be found.'.format(path))
@@ -243,7 +242,7 @@ def set_file_path(category, id, path):
 #       the id of the cached resource.
 def set_expiration(category, id):
     # Make the expiration catalog if it doesn't exist
-    if not os.path.isfile(get_cache_dir() + 'expiration.cnf'):
+    if not os.path.isfile(os.path.join(get_cache_dir(), 'expiration.cnf')):
         open(os.path.join(get_cache_dir(), 'expiration.cnf'), 'a').close()
     # Load the expiration catalog
     parser = configparser.ConfigParser()
