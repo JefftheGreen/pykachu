@@ -130,7 +130,7 @@ class PokemonClient():
 
     def set_attributes(self):
         for resource in self.beckett_client.Meta.resources:
-            method_name = 'get_' + resource.Meta.name.lower()
+            method_name = resource.get_method_name(resource, 'GET')
             getter = self.getter_factory(resource, method_name)
             setattr(self, method_name, getter)
 

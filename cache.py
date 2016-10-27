@@ -6,6 +6,15 @@ import tempfile
 from datetime import timedelta, datetime
 import yaml
 import yaml.reader
+try:
+    from yaml import CSafeLoader as YAMLLoader
+    from yaml import CSafeDumper as YAMLDumper
+except ImportError:
+    print("Can't find yaml.CSafeLoader or yaml.CSafeDumper. " +
+          "Libyaml is probably not installed. " +
+          "Using pure Python loader and dumper.")
+    from yaml import SafeLoader as YAMLLoader
+    from yaml import SafeDumper as YAMLDumper
 import configparser
 import os
 import gzip
@@ -82,6 +91,7 @@ def get_max_size():
         size = default_size
     return size
 
+
 def get_size():
     return 0
     # TODO: function that gets total size of cache
@@ -132,28 +142,28 @@ def read_cache(category, id, file_name=None):
     if get_compression():
         try:
             with gzip.open(file_name, mode='rb') as file:
-                cached = yaml.load(file.read(), Loader=yaml.CSafeLoader)
+                cached = yaml.load(file.read(), Loader=YAMLLoader)
         except FileNotFoundError:
             return None
         # The file isn't compressed or is corrupted
         except OSError:
             try:
                 with open(file_name, mode='r+') as file:
-                    cached = yaml.load(file, Loader=yaml.CSafeLoader)
+                    cached = yaml.load(file, Loader=YAMLLoader)
             except yaml.reader.ReaderError:
                 return None
     # Our cache setting is to not compress, so assume the file isn't compressed
     else:
         try:
             with open(file_name, mode='r+') as file:
-                cached = yaml.load(file, Loader=yaml.CSafeLoader)
+                cached = yaml.load(file, Loader=YAMLLoader)
         except FileNotFoundError:
             return None
         # The file is either compressed (hopefully) or is corrupted
         except yaml.reader.ReaderError:
             try:
                 with gzip.open(file_name, mode='rb') as file:
-                    cached = yaml.load(file.read(), Loader=yaml.CSafeLoader)
+                    cached = yaml.load(file.read(), Loader=YAMLLoader)
             except yaml.reader.ReaderError:
                 return None
     return cached
@@ -174,7 +184,7 @@ def write_cache(resource, category=None, id=None, file_name=None):
     if not file_name:
         file_name = get_file_path(category, id)
     # TODO: Make this threaded
-    cached = yaml.dump_all([resource], Dumper=yaml.CSafeDumper)
+    cached = yaml.dump_all([resource], Dumper=YAMLDumper)
     # If using compression, write the file with gzip
     if get_compression():
         with gzip.open(file_name, mode='wb', compresslevel=6) as file:
