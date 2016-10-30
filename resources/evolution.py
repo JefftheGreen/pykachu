@@ -4,7 +4,27 @@ import resources.common
 from universal import lazy_property
 import resources.utility as utility
 
-class EvolutionChainResource(utility.CacheablePropertyResource):
+
+class EvolutionChainResource(utility.UtilityResource):
+    """
+    A resource describing an evolution chain.
+
+    Evolution chains are essentially family trees. They start with the lowest
+    stage within a family and detail evolution conditions for each as well as
+    Pokémon they can evolve into up through the hierarchy.
+
+        Fields:
+            id (int)
+                The identifier for this evolution chain resource
+            baby_trigger_item (NamedAPIResource -> Item)
+                The item that a Pokémon would be holding when mating that would
+                trigger the egg hatching a baby Pokémon rather than a basic
+                Pokémon
+            chain (ChainLink)
+                The base chain link object. Each link contains evolution details
+                for a Pokémon in the chain. Each link references the next
+                Pokémon in the natural evolution order.
+    """
 
     yaml_tag = '!EvolutionChainResource'
 
@@ -36,6 +56,21 @@ class EvolutionChainResource(utility.CacheablePropertyResource):
 
 
 class ChainLink:
+    """
+    A class describing a link in an evolutionary chain.
+
+        Fields:
+            is_baby (bool)
+                Whether or not this link is for a baby Pokémon. This would only
+                ever be true on the base link.
+            species (NamedAPIResource -> PokemonSpeciesResource)
+                The Pokémon species at this point in the evolution chain
+            evolution_details (list of EvolutionDetail)
+                All details regarding the specific details of the referenced
+                Pokémon species evolution
+            evolves_to (list of ChainLink)
+                A List of chain objects
+    """
 
     def __init__(self, **kwargs):
         self.is_baby = kwargs['is_baby']
@@ -47,6 +82,66 @@ class ChainLink:
 
 
 class EvolutionDetail:
+    """
+    A class representing the details of how a pokemon evolves.
+
+        Fields:
+            item (NamedAPIResource -> ItemResource)
+                The item required to cause evolution this into Pokémon species
+            trigger (NamedAPIResource -> EvolutionTriggerResource)
+                The type of event that triggers evolution into this Pokémon
+                species
+            gender (int)
+                The id of the gender of the evolving Pokémon species must be in
+                order to evolve into this Pokémon species
+            held_item (NamedAPIResource -> ItemResource)
+                The item the evolving Pokémon species must be holding during the
+                evolution trigger event to evolve into this Pokémon species
+            known_move (NamedAPIResource -> MoveResource)
+                The move that must be known by the evolving Pokémon species
+                during the evolution trigger event in order to evolve into this
+                Pokémon species
+            known_move_type (NamedAPIResource -> TypeResource)
+                The evolving Pokémon species must know a move with this type
+                during the evolution trigger event in order to evolve into this
+                Pokémon species
+            location (NamedAPIResource -> LocationResource)
+                The location the evolution must be triggered at.
+            min_level (int)
+                The minimum required level of the evolving Pokémon species to
+                evolve into this Pokémon species
+            min_happiness (int)
+                The minimum required level of happiness the evolving Pokémon
+                species to evolve into this Pokémon species
+            min_beauty (int)
+                The minimum required level of beauty the evolving Pokémon
+                species to evolve into this Pokémon species
+            min_affection (int)
+                The minimum required level of affection the evolving Pokémon
+                species to evolve into this Pokémon species
+            needs_overworld_rain (bool)
+                Whether or not it must be raining in the overworld to cause
+                evolution this Pokémon species
+            party_species (NamedAPIResource -> PokemonSpeciesResource)
+                The Pokémon species that must be in the players party in order
+                for the evolving Pokémon species to evolve into this Pokémon
+                species
+            party_type (NamedAPIResource -> TypeResource)
+                The player must have a Pokémon of this type in their party
+                during the evolution trigger event in order for the evolving
+                Pokémon species to evolve into this Pokémon species
+            relative_physical_stats (int)
+                The required relation between the Pokémon's Attack and Defense
+                stats. 1 means Attack > Defense. 0 means Attack = Defense.
+                -1 means Attack < Defense.
+            time_of_day (str)
+                The required time of day. Day or night.
+            trade_species (NamedAPIResource -> PokemonSpeciesResource)
+                Pokémon species for which this one must be traded.
+            turn_upside_down (bool)
+                Whether or not the 3DS needs to be turned upside-down as this
+                Pokémon levels up.
+    """
 
     def __init__(self, **kwargs):
         self.item = None if kwargs['item'] is None \
@@ -77,7 +172,24 @@ class EvolutionDetail:
         self.turn_upside_down = kwargs['turn_upside_down']
 
 
-class EvolutionTriggerResource(utility.CacheablePropertyResource):
+class EvolutionTriggerResource(utility.UtilityResource):
+    """
+    A resource representing an evolution trigger.
+
+    Evolution triggers are the events and conditions that cause a Pokémon to
+    evolve. Check out Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this evolution trigger resource
+            name (str)
+                The name for this evolution trigger resource
+            names (list of Name)
+                The name of this evolution trigger listed in different languages
+            pokemon_species (list of NamedAPIResource -> PokemonSpeciesResource)
+                A list of pokemon species that result from this evolution
+                trigger
+    """
 
     yaml_tag = '!EvolutionTriggerResource'
 

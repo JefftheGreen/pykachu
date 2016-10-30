@@ -5,7 +5,36 @@ import resources.utility as utility
 from universal import lazy_property
 
 
-class AbilityResource(utility.CacheablePropertyResource):
+class AbilityResource(utility.UtilityResource):
+    """
+    A resource representing a pokemon ability.
+
+    Abilities provide passive effects for Pokémon in battle or in the overworld.
+    Pokémon have multiple possible abilities but can have only one ability at a
+    time. Check out Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this ability resource
+            name (str)
+                The name for this ability resource
+            is_main_series (bool)
+                Whether or not this ability originated in the main series of the
+                video games
+            generation (NamedAPIResource -> GenerationResource)
+                The generation this ability originated in
+            names (list of Name)
+                The name of this ability listed in different languages
+            effect_entries (list of VerboseEffect)
+                The effect of this ability listed in different languages
+            effect_changes (list of AbilityEffectChange)
+                The list of previous effects this ability has had across version
+                groups
+            flavor_text_entries (list of AbilityFlavorText)
+                The flavor text of this ability listed in different languages
+            pokemon (list of AbilityPokemon)
+                A list of Pokémon that could potentially have this ability
+    """
 
     yaml_tag = '!AbilityResource'
 
@@ -65,15 +94,20 @@ class AbilityResource(utility.CacheablePropertyResource):
         return [pokemon.name for pokemon in self.pokemon]
 
 
-class AbilityFlavorText:
+class AbilityFlavorText(common.FlavorText):
+    """
+    An object containing flavor text for an ability in a particular version
+    group.
+    """
 
     def __init__(self, **kwargs):
-        self.flavor_text = kwargs['flavor_text']
-        self.language = common.NamedAPIResource(**kwargs['language'])
         self.version_group = common.NamedAPIResource(**kwargs['version_group'])
 
 
 class AbilityPokemon:
+    """
+    An object relating a pokemon to an ability it has.
+    """
 
     def __init__(self, **kwargs):
         self.is_hidden = kwargs['is_hidden']
@@ -93,7 +127,26 @@ class AbilityPokemon:
         return self.pokemon.resource
 
 
-class CharacteristicResource(utility.CacheablePropertyResource):
+class CharacteristicResource(utility.UtilityResource):
+    """
+    A resource representing a pokemon characteristic.
+
+    Characteristics indicate which stat contains a Pokémon's highest IV. A
+    Pokémon's Characteristic is determined by the remainder of its highest IV
+    divided by 5 (gene_modulo). Check out Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this characteristic resource
+            gene_modulo (int)
+                The remainder of the highest stat/IV divided by 5
+            possible_values (list of int)
+                The possible values of the highest stat that would result in a
+                Pokémon recieving this characteristic when divided by 5
+            descriptions (list of Description)
+                The descriptions of this characteristic listed in different
+                languages
+    """
 
     yaml_tag = '!CharacteristicResource'
 
@@ -121,7 +174,24 @@ class CharacteristicResource(utility.CacheablePropertyResource):
                     for kwargs in self._descriptions]
 
 
-class EggGroupResource(utility.CacheablePropertyResource):
+class EggGroupResource(utility.UtilityResource):
+    """
+    A resource representing a pokemon egg group.
+
+    Egg Groups are categories which determine which Pokémon are able to
+    interbreed. Pokémon may belong to either one or two Egg Groups. Check out
+    Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this egg group resource
+            name (str)
+                The name for this egg group resource
+            names (list of Name)
+                The name of this egg group listed in different languages
+            pokemon_species (list of NamedAPIResource -> PokemonSpeciesResource)
+                A list of all Pokémon species that are members of this egg group
+    """
     
     yaml_tag = 'PokemonCharacteristicResource'
     
@@ -151,7 +221,26 @@ class EggGroupResource(utility.CacheablePropertyResource):
                 for kwargs in self._pokemon_species]
 
 
-class GenderResource(utility.CacheablePropertyResource):
+class GenderResource(utility.UtilityResource):
+    """
+    A resource representing a gender.
+
+    Genders were introduced in Generation II for the purposes of breeding
+    Pokémon but can also result in visual differences or even different
+    evolutionary lines. Check out Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this gender resource
+            name (str)
+                The name for this gender resource
+            pokemon_species_details (list of PokemonSpeciesGender)
+                A list of Pokémon species that can be this gender and how
+                likely it is that they will be
+            required_for_evolution (list of NamedAPIResource -> PokemonSpecies)
+                A list of Pokémon species that required this gender in order for
+                a Pokémon to evolve into them
+    """
 
     yaml_tag = '!GenderResource'
 
@@ -185,6 +274,18 @@ class GenderResource(utility.CacheablePropertyResource):
 
 
 class PokemonSpeciesGender:
+    """
+    An object describing how likely it is for a pokemon to be a particular
+    gender.
+
+        Fields:
+            rate (int)
+                The chance of this Pokémon being female, in eighths; or -1 for
+                genderless
+            pokemon_species (NamedAPIResource -> PokemonSpecies)
+                A Pokémon species that can be the referenced gender
+
+    """
 
     def __init__(self, **kwargs):
         self.rate = kwargs['rate']
@@ -197,7 +298,30 @@ class PokemonSpeciesGender:
         return self.rate / 8 if self.rate > 0 else 1.0
 
 
-class GrowthRateResource(utility.CacheablePropertyResource):
+class GrowthRateResource(utility.UtilityResource):
+    """
+    A resource representing the rate at which a pokemon gains levels.
+
+    Growth rates are the speed with which Pokémon gain levels through
+    experience. Check out Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this gender resource
+            name (str)
+                The name for this gender resource
+            formula (str)
+                The formula used to calculate the rate at which the Pokémon
+                species gains level
+            descriptions (list of Description)
+                The descriptions of this growth rate listed in different
+                languages
+            levels (list of GrowthRateExperienceLevel)
+                A list of levels and the amount of experienced needed to atain
+                them based on this growth rate
+            pokemon_species (list of NamedAPIResource -> PokemonSpeciesResource)
+                A list of Pokémon species that gain levels at this growth rate
+    """
 
     yaml_tag = '!GrowthRateResource'
 
@@ -236,13 +360,51 @@ class GrowthRateResource(utility.CacheablePropertyResource):
 
 
 class GrowthRateExperienceLevel:
+    """
+    An object describing how many experience points a pokemon requires to gain
+    a level under a particular growth rate.
+
+        Fields:
+            level (int)
+                The level gained
+            experience (int)
+                The amount of experience required to reach the referenced level
+    """
 
     def __init__(self, **kwargs):
         self.level = kwargs['level']
         self.experience = kwargs['experience']
 
 
-class NatureResource(utility.CacheablePropertyResource):
+class NatureResource(utility.UtilityResource):
+    """
+    A resource representing a pokemon nature.
+
+    Natures influence how a Pokémon's stats grow. See Bulbapedia for greater
+    detail.
+
+        Fields:
+            id (int)
+                The identifier for this nature resource
+            name (str)
+                The name for this nature resource
+            decreased_stat (NamedAPIResource -> StatResource)
+                The stat decreased by 10% in Pokémon with this nature
+            increased_stat (NamedAPIResource ->StatResource)
+                The stat increased by 10% in Pokémon with this nature
+            hates_flavor (NamedAPIResource -> BerryFlavorResource)
+                The flavor hated by Pokémon with this nature
+            likes_flavor (NamedAPIResource -> BerryFlavorResource)
+                The flavor liked by Pokémon with this nature
+            pokeathlon_stat_changes (list of NatureStatChange)
+                A list of Pokéathlon stats this nature effects and how much it
+                effects them
+            move_battle_style_preference (list of MoveBattleStylePreference)
+                A list of battle styles and how likely a Pokémon with this
+                nature is to use them in the Battle Palace or Battle Tent.
+            names (list of Name)
+                The name of this nature listed in different languages
+    """
 
     yaml_tag = '!NatureResource'
 
@@ -331,6 +493,15 @@ class NatureResource(utility.CacheablePropertyResource):
 
 
 class NatureStatChange:
+    """
+    An object describing how a nature changes pokeathlon stats.
+
+        Fields:
+            max_change (int)
+                The amount of change
+            pokeathlon_stat (NamedAPIResource -> PokeathlonStatResource)
+                The stat being affected
+    """
 
     def __init__(self, **kwargs):
         self.max_change = kwargs['max_change']
@@ -347,7 +518,7 @@ class MoveBattleStylePreference:
             **kwargs['move_battle_style'])
 
 
-class PokeathlonStatResource(utility.CacheablePropertyResource):
+class PokeathlonStatResource(utility.UtilityResource):
     yaml_tag = '!PokeathlonStatResource'
 
     class Meta:
@@ -391,7 +562,7 @@ class NaturePokeathlonStatAffect:
         self.nature = common.NamedAPIResource(**kwargs['nature'])
 
 
-class PokemonColorResource(utility.CacheablePropertyResource):
+class PokemonColorResource(utility.UtilityResource):
     yaml_tag = '!ColorResource'
 
     class Meta:
@@ -420,7 +591,7 @@ class PokemonColorResource(utility.CacheablePropertyResource):
                 for kwargs in self._pokemon_species]
 
 
-class PokemonFormResource(utility.CacheablePropertyResource):
+class PokemonFormResource(utility.UtilityResource):
     yaml_tag = '!FormResource'
 
     class Meta:
@@ -478,7 +649,7 @@ class PokemonFormSprites:
         self.back_shiny = kwargs['back_shiny']
 
 
-class PokemonHabitatResource(utility.CacheablePropertyResource):
+class PokemonHabitatResource(utility.UtilityResource):
     yaml_tag = '!HabitatResource'
 
     class Meta:
@@ -507,7 +678,7 @@ class PokemonHabitatResource(utility.CacheablePropertyResource):
                 for kwargs in self._pokemon_species]
 
 
-class PokemonShapeResource(utility.CacheablePropertyResource):
+class PokemonShapeResource(utility.UtilityResource):
     yaml_tag = '!ShapeResource'
 
     class Meta:
@@ -548,7 +719,7 @@ class AwesomeName:
         self.language = common.NamedAPIResource(**kwargs['language'])
 
 
-class PokemonSpeciesResource(utility.CacheablePropertyResource):
+class PokemonSpeciesResource(utility.UtilityResource):
     yaml_tag = '!SpeciesResource'
 
     class Meta:
@@ -683,7 +854,7 @@ class PokemonSpeciesVariety:
         self.pokemon = common.NamedAPIResource(**kwargs['pokemon'])
 
 
-class StatResource(utility.CacheablePropertyResource):
+class StatResource(utility.UtilityResource):
     yaml_tag = '!StatResource'
 
     class Meta:
@@ -751,7 +922,7 @@ class NatureStatAffectSets:
         self.decrease = [MoveStatAffect(**msa) for msa in kwargs['decrease']]
 
 
-class TypeResource(utility.CacheablePropertyResource):
+class TypeResource(utility.UtilityResource):
     yaml_tag = '!Resource'
 
     class Meta:
@@ -824,10 +995,6 @@ class TypeResource(utility.CacheablePropertyResource):
     def pokemon(self):
         return [TypePokemon(**kwargs) for kwargs in self._names]
 
-    @lazy_property
-    def moves(self):
-        return [common.NamedAPIResource(**kwargs) for kwargs in self._moves]
-
 
 class TypeRelations:
 
@@ -853,7 +1020,7 @@ class TypePokemon:
         self.pokemon = common.NamedAPIResource(**kwargs['pokemon'])
 
 
-class PokemonResource(utility.CacheablePropertyResource):
+class PokemonResource(utility.UtilityResource):
 
     yaml_tag = '!PokemonResource'
 
@@ -913,10 +1080,6 @@ class PokemonResource(utility.CacheablePropertyResource):
     @lazy_property
     def held_items(self):
         return [PokemonHeldItem(**item) for item in self._held_items]
-
-    @lazy_property
-    def moves(self):
-        return [PokemonMove(**move) for move in self._moves]
 
     @lazy_property
     def sprites(self):

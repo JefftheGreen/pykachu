@@ -17,8 +17,8 @@ class APIResource:
         id (str)
             The id of the resource.
         resource (property)
-            When first requested, calls the API for the resource the object points
-            to. It is cached and returned.
+            When first requested, calls the API for the resource the object
+            points to. It is cached and returned.
     """
 
     def __init__(self, url, resource_type=None):
@@ -31,8 +31,8 @@ class APIResource:
     @lazy_property
     def resource(self):
         poke_client = client.PokemonClient()
-        resource = getattr(poke_client, 
-                           'get_' + self.resource_type)(uid=self.id)
+        resource = getattr(poke_client,
+                           'get_' + self.resource_type.replace('-', '_'))(uid=self.id)[0]
         return resource
 
 
@@ -108,7 +108,7 @@ class FlavorText:
 
 class GenerationGameIndex:
     """
-    A class
+    A class 
     """
 
     def __init__(self, **kwargs):

@@ -5,7 +5,7 @@ from universal import lazy_property
 import resources.utility as utility
 
 
-class BerryResource(utility.CacheablePropertyResource):
+class BerryResource(utility.UtilityResource):
     """
     A resource object representing a Berry.
 
@@ -33,15 +33,15 @@ class BerryResource(utility.CacheablePropertyResource):
         soil_dryness (integer)
             The speed at which this Berry dries out the soil as it grows. A higher
             rate means the soil dries more quickly.
-        firmness (NamedAPIResource -> BerryFirmness)
+        firmness (NamedAPIResource -> BerryFirmnessResource)
             The firmness of this berry, used in making Pokéblocks or Poffins
         flavors (list of BerryFlavorMap)
             A list of references to each flavor a berry can have and the potency of
             each of those flavors in regard to this berry
-        item (NamedAPIResource -> Item)
+        item (NamedAPIResource -> ItemResource)
             Berries are actually items. This is a reference to the item specific
             data for this berry.
-        natural_gift_type (NamedAPIResource -> Type)
+        natural_gift_type (NamedAPIResource -> TypeResource)
             The Type the move "Natural Gift" has when used with this Berry
     """
 
@@ -79,7 +79,7 @@ class BerryResource(utility.CacheablePropertyResource):
 
     @lazy_property
     def flavors(self):
-        return BerryFlavorMap(**self._flavors)
+        return [BerryFlavorMap(**f) for f in self._flavors]
 
     @lazy_property
     def item(self):
@@ -96,7 +96,7 @@ class BerryFlavorMap:
         Fields:
             potency (integer)
                 How powerful the referenced flavor is for this berry
-            flavor (NamedAPIResource -> BerryFlavor)
+            flavor (NamedAPIResource -> BerryFlavorResource)
                 The referenced berry flavor
     """
 
@@ -110,8 +110,7 @@ class BerryFlavorMap:
         return self.flavor.resource
 
 
-
-class BerryFirmnessResource(utility.CacheablePropertyResource):
+class BerryFirmnessResource(utility.UtilityResource):
     """
     A resource object representing berry firmness.
         Fields:
@@ -119,7 +118,7 @@ class BerryFirmnessResource(utility.CacheablePropertyResource):
                 The identifier for this berry firmness resource
             name (string)
                 The name for this berry firmness resource
-            berries (list of NamedAPIResource -> Berry)
+            berries (list of NamedAPIResource -> BerryResource)
                 A list of the berries with this firmness
             names (list of Name)
                 The name of this berry firmness listed in different languages
@@ -154,7 +153,7 @@ class BerryFirmnessResource(utility.CacheablePropertyResource):
         return [resources.common.Name(**kwargs) for kwargs in self._names]
 
 
-class BerryFlavorResource(utility.CacheablePropertyResource):
+class BerryFlavorResource(utility.UtilityResource):
     """
     Flavors determine whether a Pokémon will benefit or suffer from eating a
     berry based on their nature. Check out Bulbapedia for greater detail.
@@ -165,7 +164,7 @@ class BerryFlavorResource(utility.CacheablePropertyResource):
                 The name for this berry flavor resource
             berries (list of FlavorBerryMap)
                 A list of the berries with this flavor
-            contest_type (NamedAPIResource -> ContestType)
+            contest_type (NamedAPIResource -> ContestTypeResource)
                 The contest type that correlates with this berry flavor
             names (list of Name)
                 The name of this berry flavor listed in different languages
@@ -211,7 +210,7 @@ class FlavorBerryMap:
         Fields:
             potency (int)
                 How powerful the referenced flavor is for this berry
-            berry (NamedAPIResource -> Berry)
+            berry (NamedAPIResource -> BerryResource)
                 The berry with the referenced flavor
     """
 

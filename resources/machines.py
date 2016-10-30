@@ -5,7 +5,23 @@ from universal import lazy_property
 import resources.utility as utility
 
 
-class MachineResource(utility.CacheablePropertyResource):
+class MachineResource(utility.UtilityResource):
+    """
+    A resource representing a TM or HM.
+
+    Machines are the representation of items that teach moves to Pokémon. They
+    vary from version to version, so it is not certain that one specific TM or
+    HM corresponds to a single Machine.
+
+        Fields:
+            id (int)
+                The identifier for this machine resource
+            item (NamedAPIResource -> ItemResource)
+                The TM or HM item that corresponds to this machine
+            move (NamedAPIResource -> MoveResource)
+                The move that is taught by this machine
+            version_group (NamedAPIResource -> VersionGroupResource)
+    """
 
     yaml_tag = '!MachineResource'
 

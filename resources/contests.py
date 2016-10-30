@@ -1,11 +1,28 @@
 # /usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import resources.common
 from universal import lazy_property
 import resources.utility as utility
 
 
-class ContestTypeResource(utility.CacheablePropertyResource):
+class ContestTypeResource(utility.UtilityResource):
+    """
+    A resource representing a contest type.
+
+    Contest types are categories judges used to weigh a Pokémon's condition in
+    Pokémon contests. Check out Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this contest type resource
+            name (str)
+                The name for this contest type resource
+            berry_flavor (NamedAPIResource -> BerryFlavorResource)
+                The berry flavor that correlates with this contest type
+            names (list of ContestName)
+                The name of this contest type listed in different languages
+    """
 
     yaml_tag = '!ContestTypeResource'
 
@@ -37,6 +54,17 @@ class ContestTypeResource(utility.CacheablePropertyResource):
 
 
 class ContestName:
+    """
+    A class describing a contest type name.
+
+        Fields:
+            name (str)
+                The name for this contest
+            color (str)
+                The color associated with this contest's name
+            language (NamedAPIResource -> LanguageResource)
+                The language that this name is in
+    """
 
     def __init__(self, **kwargs):
         self.name = kwargs['name']
@@ -44,7 +72,25 @@ class ContestName:
         self.language = resources.common.NamedAPIResource(**kwargs['language'])
 
 
-class ContestEffectResource(utility.CacheablePropertyResource):
+class ContestEffectResource(utility.UtilityResource):
+    """
+    A resource representing a contest effect.
+
+    Contest effects refer to the effects of moves when used in contests.
+
+        Fields:
+            id (int)
+                The identifier for this contest type resource
+            appeal (int)
+                The base number of hearts the user of this move gets
+            jam (int)
+                The base number of hearts the user's opponent loses
+            effect_entries (list of Effect)
+                The result of this contest effect listed in different languages
+            flavor_text_entries (list of FlavorText)
+                The flavor text of this contest effect listed in different
+                languages
+    """
 
     yaml_tag = '!ContestEffectResource'
 
@@ -77,7 +123,24 @@ class ContestEffectResource(utility.CacheablePropertyResource):
                 for kwargs in self._flavor_text_entries]
 
 
-class SuperContestEffectResource(utility.CacheablePropertyResource):
+class SuperContestEffectResource(utility.UtilityResource):
+    """
+    A resource describing a super contest effect.
+
+    Super contest effects refer to the effects of moves when used in super
+    contests.
+
+        Fields:
+            id (int)
+                The identifier for this super contest effect resource
+            appeal (int)
+                The level of appeal this super contest effect has
+            flavor_text_entries (list of FlavorText)
+                The flavor text of this super contest effect listed in different
+                languages
+            moves (list of NamedAPIResource -> MoveResource)
+                A list of moves that have the effect when used in super contests
+    """
 
     yaml_tag = '!SuperContestEffectResource'
 
@@ -103,7 +166,3 @@ class SuperContestEffectResource(utility.CacheablePropertyResource):
     def flavor_text_entries(self):
         return [resources.common.FlavorText(**kwargs)
                 for kwargs in self._flavor_text_entries]
-
-    @lazy_property
-    def moves(self):
-        return [resources.common.NamedAPIResource(**kwargs) for kwargs in self._moves]

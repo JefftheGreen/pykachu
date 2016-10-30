@@ -6,7 +6,24 @@ import resources.utility as utility
 from universal import lazy_property
 
 
-class EncounterMethodResource(utility.CacheablePropertyResource):
+class EncounterMethodResource(utility.UtilityResource):
+    """
+    A resource describing an encounter method.
+
+    Methods by which the player might can encounter Pokémon in the wild, e.g.,
+    walking in tall grass. Check out Bulbapedia for greater detail.
+
+        Fields:
+            id (int)
+                The identifier for this encounter method resource
+            name (str)
+                The name for this encounter method resource
+            order (int)
+                A good value for sorting
+            names (list of Name)
+                The name of this encounter method listed in different languages
+    """
+
     yaml_tag = '!EncounterMethodResource'
 
     class Meta:
@@ -38,7 +55,23 @@ class EncounterMethodResource(utility.CacheablePropertyResource):
         return [resources.common.Name(**kwargs) for kwargs in self._names]
 
 
-class EncounterConditionResource(utility.CacheablePropertyResource):
+class EncounterConditionResource(utility.UtilityResource):
+    """
+    A resource describing an encounter condition.
+
+    Conditions which affect what pokemon might appear in the wild, e.g., day or
+    night.
+
+        Fields:
+            id (int)
+                The identifier for this encounter condition resource
+            name (str)
+                The name for this encounter condition resource
+            names (list of Name)
+                The name of this encounter method listed in different languages
+            values (list of NamedAPIResource -> EncounterConditionValueResource)
+                A list of possible values for this encounter condition
+    """
 
     yaml_tag = '!EncounterConditionResource'
 
@@ -69,7 +102,23 @@ class EncounterConditionResource(utility.CacheablePropertyResource):
         return [utility.NamedAPIResource(**kwargs) for kwargs in self._values]
 
 
-class EncounterConditionValueResource(utility.CacheablePropertyResource):
+class EncounterConditionValueResource(utility.UtilityResource):
+    """
+    A resource describing a value of an encounter condition.
+
+    Encounter condition values are the various states that an encounter
+    condition can have, i.e., time of day can be either day or night.
+
+        Fields:
+            id (int)
+                The identifier for this encounter condition value resource
+            name (str)
+                The name for this encounter condition value resource
+            condition (list of NamedAPIResource -> EncounterCondiitonResource)
+                The condition this encounter condition value pertains to
+            names (list of Name)
+                The condition this encounter condition value pertains to
+    """
 
     yaml_tag = '!EncounterConditionValueResource'
 
